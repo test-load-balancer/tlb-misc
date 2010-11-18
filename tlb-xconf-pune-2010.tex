@@ -61,7 +61,7 @@
 
 \section{Motivation}
 
-\subsection{The basic problem that we solved}
+\subsection{Problem that we solved}
 
 \begin{frame}{This is the story of how we went from...}
   \begin{centering}
@@ -90,12 +90,12 @@
   \end{centering}
 \end{frame}
 
-\subsection{Effect: Productivity Enhancement}
+\subsection{Dream: Fast Builds}
 
 \begin{frame}
   \begin{centering}
     \begin{itemize}
-    \item Fast Build results in Rapid Development
+    \item Fast build = Rapid development
       \pause
     \item Devs spend less time waiting to checkin
       \begin{itemize}
@@ -108,34 +108,52 @@
   \end{centering}
 \end{frame}
 
-
-\begin{frame}{Some title}
-  You can create overlays\dots
-  \begin{itemize}
-  \item using the \texttt{pause} command:
+\begin{frame}{but...}
+  \begin{centering}
     \begin{itemize}
-    \item
-      First item.
+    \item Major part of build time is spent in running tests
       \pause
-    \item    
-      Second item.
+    \item Speeding up builds is non trivial
+      \pause
+    \item Most TW teams have a dev task for this don\text{'}t they??
     \end{itemize}
-  \item
-    using overlay specifications:
+  \end{centering}
+\end{frame}
+
+\begin{frame}{Usual ways}
+  \begin{centering}
     \begin{itemize}
-    \item<3->
-      First item.
-    \item<4->
-      Second item.
+    \item Split applications into modules
+      \pause
+      \begin{itemize}
+      \item Difficult to model (typically end up in diamond dependencies)
+        \pause
+      \item If downstream dependencies fail, turn around time to fix is huge
+      \end{itemize}      
+      \pause
+    \item Throw more hardware at it - Slice and dice
+      \pause
+      \begin{itemize}
+      \item Hand written partitioning using directories/tags etc (unequal partitions)
+        \pause
+      \item Pipelines (unit -> integration -> smoke -> functional) (serial process)
+      \end{itemize}
     \end{itemize}
-  \item
-    using the general \texttt{uncover} command:
-    \begin{itemize}
-      \uncover<5->{\item
-        First item.}
-      \uncover<6->{\item
-        Second item.}
-    \end{itemize}
+    \pause
+    Logical! but Suboptimal :-(
+  \end{centering}
+\end{frame}
+
+\subsection{Introducing TLB}
+
+\begin{frame}{What if partitioning can be off-loaded?}
+  What does TLB do?
+  \begin{itemize}
+  \item Makes \texttt{n} partitions
+    \pause
+  \item Understands which partition the \emph{current test runner process} is
+    \pause
+  \item Runs only \texttt{one} of the \texttt{n} \emph{mutually exclusive \& collectively exhaustive} sets
   \end{itemize}
 \end{frame}
 
