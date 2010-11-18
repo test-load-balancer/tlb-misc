@@ -1,0 +1,242 @@
+\documentclass{beamer}
+\mode<presentation>
+{
+  \usetheme{Warsaw}
+  \setbeamercovered{transparent}
+}
+
+
+\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+
+\title[TLB - https://github.com/test-load-balancer]
+      {TLB}
+
+\subtitle
+    {a test load balancer for you}
+
+\author[Pavan, Janmejay]
+       {Pavan KS\inst{1} \and Janmejay Singh\inst{2}}
+
+\institute[ThoughtWorks Studios]
+{
+  \inst{1}%
+  mail: itspanzi@gmail.com\\
+  blog: http://itspanzi.blogspot.com
+  \and
+  \inst{2}%
+  mail: singh.janmejay@gmail.com\\
+  blog: http://codehunk.wordpress.com
+}
+
+\date[xconf] 
+{XConf Pune, 2010}
+
+\subject{Introduction to internals of TLB, and its usage}
+% \pgfdeclareimage[height=0.5cm]{logo}{logo-filename}
+% \logo{\pgfuseimage{logo}}
+
+\AtBeginSubsection[]
+{
+  \begin{frame}<beamer>{Outline}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+% If you wish to uncover everything in a step-wise fashion, uncomment the following command: 
+%\beamerdefaultoverlayspecification{<+->}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents
+  % You might wish to add the option [pausesections]
+\end{frame}
+
+\section{Motivation}
+
+\subsection{The basic problem that we solved}
+
+\begin{frame}{This is the story of how we went from...}
+  \begin{centering}
+    \pgfimage[width=10cm]{images/no-balance-go.png}
+    \par
+  \end{centering}
+\end{frame}
+
+\begin{frame}{to...}
+  \begin{centering}
+    \pgfimage[width=10cm]{images/count-balance-go.png}
+    \par
+  \end{centering}
+\end{frame}
+
+\begin{frame}{to...}
+  \begin{centering}
+    \pgfimage[width=10cm]{images/time-balance-go.png}
+    \par
+  \end{centering}
+\end{frame}
+
+\begin{frame}{by changing}
+  \begin{centering}
+    ...just a few lines in the build script
+  \end{centering}
+\end{frame}
+
+\subsection{Effect: Productivity Enhancement}
+
+\begin{frame}
+  \begin{centering}
+    \begin{itemize}
+    \item Fast Build results in Rapid Development
+      \pause
+    \item Devs spend less time waiting to checkin
+      \begin{itemize}
+      \item Need not be limited to unit/integration tests          
+      \item Functional/Acceptance tests
+      \end{itemize}
+      \pause
+    \item Easier for devs to run precommit builds - Results in pulling upstream changes often and running builds frequently
+    \end{itemize}
+  \end{centering}
+\end{frame}
+
+
+\begin{frame}{Some title}
+  You can create overlays\dots
+  \begin{itemize}
+  \item using the \texttt{pause} command:
+    \begin{itemize}
+    \item
+      First item.
+      \pause
+    \item    
+      Second item.
+    \end{itemize}
+  \item
+    using overlay specifications:
+    \begin{itemize}
+    \item<3->
+      First item.
+    \item<4->
+      Second item.
+    \end{itemize}
+  \item
+    using the general \texttt{uncover} command:
+    \begin{itemize}
+      \uncover<5->{\item
+        First item.}
+      \uncover<6->{\item
+        Second item.}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Previous Work}
+
+\begin{frame}{Make Titles Informative.}
+\end{frame}
+
+\begin{frame}{Make Titles Informative.}
+\end{frame}
+
+
+
+\section{Our Results/Contribution}
+
+\subsection{Main Results}
+
+\begin{frame}{Make Titles Informative.}
+\end{frame}
+
+\begin{frame}{Make Titles Informative.}
+\end{frame}
+
+\begin{frame}{Make Titles Informative.}
+\end{frame}
+
+
+\subsection{Basic Ideas for Proofs/Implementation}
+
+\begin{frame}{Make Titles Informative.}
+\end{frame}
+
+\begin{frame}{Make Titles Informative.}
+\end{frame}
+
+\begin{frame}{Make Titles Informative.}
+\end{frame}
+
+
+
+\section*{Summary}
+
+\begin{frame}{Summary}
+
+  % Keep the summary *very short*.
+  \begin{itemize}
+  \item
+    The \alert{first main message} of your talk in one or two lines.
+  \item
+    The \alert{second main message} of your talk in one or two lines.
+  \item
+    Perhaps a \alert{third message}, but not more than that.
+  \end{itemize}
+  
+  % The following outlook is optional.
+  \vskip0pt plus.5fill
+  \begin{itemize}
+  \item
+    Outlook
+    \begin{itemize}
+    \item
+      Something you haven't solved.
+    \item
+      Something else you haven't solved.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+
+% All of the following is optional and typically not needed. 
+\appendix
+\section<presentation>*{\appendixname}
+\subsection<presentation>*{For Further Reading}
+
+\begin{frame}[allowframebreaks]
+  \frametitle<presentation>{For Further Reading}
+    
+  \begin{thebibliography}{10}
+    
+  \beamertemplatebookbibitems
+  % Start with overview books.
+
+  \bibitem{Author1990}
+    A.~Author.
+    \newblock {\em Handbook of Everything}.
+    \newblock Some Press, 1990.
+ 
+    
+  \beamertemplatearticlebibitems
+  % Followed by interesting articles. Keep the list short. 
+
+  \bibitem{Someone2000}
+    S.~Someone.
+    \newblock On this and that.
+    \newblock {\em Journal of This and That}, 2(1):50--100,
+    2000.
+  \end{thebibliography}
+\end{frame}
+
+\end{document}
+
+
