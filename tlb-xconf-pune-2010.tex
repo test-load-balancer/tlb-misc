@@ -175,7 +175,7 @@
   While exponential smoothing, every test-time entry $ S_t \quad \forall t > 0 $ is recorded as:\\
   \begin{alignat}{3}
     S_1 & = x_o\\
-    S_t & = \alpha x_t + (1 - \alpha)S_{t-1} \quad
+    S_t & = \alpha x_{t-1} + (1 - \alpha)S_{t-1} \quad
     \forall 
     \begin{cases}
       t > 1\\ 
@@ -183,7 +183,7 @@
     \end{cases}
   \end{alignat}
 
-  Where $\alpha$ is the factor of smoothing, which can be tuned externally.
+  Where $\alpha$ is the factor of smoothing, which can be tuned externally and \texttt{x} is unsmoothed reading.
 \end{frame}
 
 \begin{frame}{Failed First Orderer}{Runs tests that failed last time around, first}
@@ -301,6 +301,6 @@
 %%   \end{thebibliography}
 %% \end{frame}
 
-%% \end{document}
+\end{document}
 
 
