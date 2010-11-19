@@ -144,6 +144,8 @@
   \end{centering}
 \end{frame}
 
+\section{TLB}
+
 \subsection{Introducing TLB}
 
 \begin{frame}{What if partitioning can be off-loaded?}
@@ -158,103 +160,147 @@
 \end{frame}
 
 
-\subsection{Previous Work}
-
-\begin{frame}{Make Titles Informative.}
+\begin{frame}{Count-based Balancing}
+  \begin{centering}
+    20 tests / 4 splits $\approx$ 5 on each
+  \end{centering}
 \end{frame}
 
-\begin{frame}{Make Titles Informative.}
+\begin{frame}{Time-based Balancing}{inspired by Amdahl`s law}
+  N tests / 4 splits $\approx$ 4 splits that take equal time
 \end{frame}
 
+\begin{frame}{Smoothened Time-based Balancing}{ensures no outliers}
+  N tests / 4 splits $\approx$ 4 splits which take equal time based on history over past runs (Exponential smoothing ensures no outliers)\\
+  While exponential smoothing, every test-time entry $ S_t \quad \forall t > 0 $ is recorded as:\\
+  \begin{alignat}{3}
+    S_1 & = x_o\\
+    S_t & = \alpha x_t + (1 - \alpha)S_{t-1} \quad
+    \forall 
+    \begin{cases}
+      t > 1\\ 
+      0 < \alpha < 1
+    \end{cases}
+  \end{alignat}
 
-
-\section{Our Results/Contribution}
-
-\subsection{Main Results}
-
-\begin{frame}{Make Titles Informative.}
+  Where $\alpha$ is the factor of smoothing, which can be tuned externally.
 \end{frame}
 
-\begin{frame}{Make Titles Informative.}
+\begin{frame}{Failed First Orderer}{Runs tests that failed last time around, first}
+  Perfect for fixing builds that have a tendency to break after 6 in the evening.\\
+  \quad\\
+  You don\text{'}t need to wait for the entire build, just watch the console log for a few minutes, as you see the test you fixed pass and scroll by.
 \end{frame}
 
-\begin{frame}{Make Titles Informative.}
+\subsection{Hooking it up with your testing tool}
+
+\begin{frame}{Supported Frameworks}
+  \begin{centering}
+    \begin{itemize}
+      \item {\color{green}Junit}, {\color{green}Twist} using {\color{red}Ant} or {\color{red}Buildr} for {\color{blue}Java}
+        \pause
+      \item {\color{green}Rspec} using {\color{red}Rake} (for both {\color{blue}MRI} and {\color{blue}JRuby})
+    \end{itemize}
+  \end{centering}
 \end{frame}
 
-
-\subsection{Basic Ideas for Proofs/Implementation}
-
-\begin{frame}{Make Titles Informative.}
+\begin{frame}{We plan to support...}
+  \begin{centering}
+    \begin{itemize}
+    \item {\color{green}TestUnit} {\color{blue}MRI \& JRuby}
+    \item {\color{red}Nant} {\color{blue}.Net}
+    \item {\color{green}MSTest} {\color{blue}.Net}
+    \item {\color{green}TestNG} {\color{blue}Java}
+    \item {\color{red}Maven} {\color{blue}Java}
+    \item {\color{green}PyUnit} {\color{blue}Python}
+    \item {\color{green}Cucumber} {\color{blue}MRI \& JRuby}
+    \item {\color{green}CPPUnit} {\color{blue} C++}
+    \item {\color{green} 5am (fiveam)} {\color{blue} CommonLisp}
+    \end{itemize}
+  \end{centering}
+  \pause
+  \begin{centering}
+    \begin{itemize}
+      \item Bad news is, we haven't started work on most of these yet.
+        \pause
+      \item Good news is, we have good hackers, like yourself, listening to us here, who can help!
+    \end{itemize}
+  \end{centering}
 \end{frame}
 
-\begin{frame}{Make Titles Informative.}
+\begin{frame}{And we plan to support...}
+  \begin{center}
+    Anything else that you would like to contribute :-)
+  \end{center}
 \end{frame}
 
-\begin{frame}{Make Titles Informative.}
+\subsection{Hooking it up with CI server}
+
+\begin{frame}{Leverage parallel execution capabilities of}{tools like...}
+  \begin{center}
+    \pgfimage[height=1.5cm]{images/go-logo.png}
+  \end{center}
 \end{frame}
 
+\begin{frame}{or for that matter}
+  \begin{center}
+    {\huge Hudson, Bamboo, TeamCity, Ant Hill Pro}(if you are rich enough),{\huge or even Shell script fork}(if you are a poor dev like us).\\
+    \quad\\\quad\\
+    {\footnotesize PS: You did not see this slide :-)}
+  \end{center}
+\end{frame}
 
 
 \section*{Summary}
 
-\begin{frame}{Summary}
-
-  % Keep the summary *very short*.
-  \begin{itemize}
-  \item
-    The \alert{first main message} of your talk in one or two lines.
-  \item
-    The \alert{second main message} of your talk in one or two lines.
-  \item
-    Perhaps a \alert{third message}, but not more than that.
-  \end{itemize}
-  
-  % The following outlook is optional.
-  \vskip0pt plus.5fill
-  \begin{itemize}
-  \item
-    Outlook
-    \begin{itemize}
-    \item
-      Something you haven't solved.
-    \item
-      Something else you haven't solved.
-    \end{itemize}
-  \end{itemize}
+\begin{frame}{Summary}{}
+  \begin{centering}
+  {\huge We are patch hungry*.\\Please Contribute.\\}
+  (its BSD 2 clause)\\
+  \quad\\
+  {\huge Thank you.}\\
+  \quad\\
+  \quad\\
+  References:\\
+  http://github.com/test-load-balancer/tlb\\
+  http://github.com/test-load-balancer/tlb\_rb\\
+  \quad\\
+  * http://github.com/test-load-balancer/tlb/issues\\
+  \end{centering}
 \end{frame}
 
 
 
 % All of the following is optional and typically not needed. 
-\appendix
-\section<presentation>*{\appendixname}
-\subsection<presentation>*{For Further Reading}
+%% \appendix
+%% \section<presentation>*{\appendixname}
+%% \subsection<presentation>*{For Further Reading}
 
-\begin{frame}[allowframebreaks]
-  \frametitle<presentation>{For Further Reading}
+%% \begin{frame}[allowframebreaks]
+%%   \frametitle<presentation>{For Further Reading}
     
-  \begin{thebibliography}{10}
+%%   \begin{thebibliography}{10}
     
-  \beamertemplatebookbibitems
-  % Start with overview books.
+%%   \beamertemplatebookbibitems
+%%   % Start with overview books.
 
-  \bibitem{Author1990}
-    A.~Author.
-    \newblock {\em Handbook of Everything}.
-    \newblock Some Press, 1990.
+%%   \bibitem{Author1990}
+%%     A.~Author.
+%%     \newblock {\em Handbook of Everything}.
+%%     \newblock Some Press, 1990.
  
     
-  \beamertemplatearticlebibitems
-  % Followed by interesting articles. Keep the list short. 
+%%   \beamertemplatearticlebibitems
+%%   % Followed by interesting articles. Keep the list short. 
 
-  \bibitem{Someone2000}
-    S.~Someone.
-    \newblock On this and that.
-    \newblock {\em Journal of This and That}, 2(1):50--100,
-    2000.
-  \end{thebibliography}
-\end{frame}
+%%   \bibitem{Someone2000}
+%%     S.~Someone.
+%%     \newblock On this and that.
+%%     \newblock {\em Journal of This and That}, 2(1):50--100,
+%%     2000.
+%%   \end{thebibliography}
+%% \end{frame}
 
-\end{document}
+%% \end{document}
 
 
