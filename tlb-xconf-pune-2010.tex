@@ -229,51 +229,86 @@
 \end{frame}
 
 \begin{frame}{Communication}{Server-Client-Runner Talk}
-  \begin{centering}
-    \pgfimage[height=6cm]{images/server-client-timeline-1.png}
-    Something
-  \end{centering}
+  \begin{multicols}{2}
+    \begin{centering}
+      \pgfimage[height=6cm]{images/server-client-timeline-1.png}
+    \end{centering}
+    \begin{center}
+      {\huge Step 1}\\
+      \quad\\
+          {\large Receive list of to-be-run tests from the testing-framework}
+    \end{center}
+  \end{multicols}
 \end{frame}
 
 \begin{frame}{Communication}{Server-Client-Runner Talk}
-  \begin{centering}
-    \pgfimage[height=6cm]{images/server-client-timeline-2.png}
-    Something
-  \end{centering}
+  \begin{multicols}{2}
+    \begin{centering}
+      \pgfimage[height=6cm]{images/server-client-timeline-2.png}
+    \end{centering}
+    \begin{center}
+      {\huge Step 2}\\
+      \quad\\
+          {\large Fetch historical test data from TLB server(tests that failed in the previous run/time taken by each test)}
+    \end{center}
+  \end{multicols}
 \end{frame}
 
 \begin{frame}{Communication}{Server-Client-Runner Talk}
-  \begin{centering}
-    \pgfimage[height=6cm]{images/server-client-timeline-3.png}
-    Something
-  \end{centering}
-\end{frame}
-
-\begin{frame}{Communication}{Server-Client-Runner Talk}
-  \begin{centering}
-    \pgfimage[height=6cm]{images/server-client-timeline-4.png}
-    Something
-  \end{centering}
-\end{frame}
-
-\begin{frame}{Communication}{Server-Client-Runner Talk}
-  \begin{centering}
-    \pgfimage[height=6cm]{images/server-client-timeline-5.png}
-    Something
-  \end{centering}
-\end{frame}
-
-
-\begin{frame}{Communication}{Server-Client-Runner Talk}
-  \begin{centering}
-    \begin{multicols}{2}
-      \pgfimage[height=6cm]{images/server-client-timeline-6.png}
+  \begin{multicols}{2}
+    \begin{centering}
+      \pgfimage[height=6cm]{images/server-client-timeline-3.png}
+    \end{centering}
+    \begin{center}
+      {\huge Step 3}\\
       \begin{itemize}
-      \item foo
-      \item bar
+          \item {\large Prune the list of to-be-run tests to get tests to be actually executed(other partitions take care of pruned items)}
+          \item {\large Re-order the pruned list,for instance \emph{pull tests that failed in the previous run to execute first}}
       \end{itemize}
-    \end{multicols}
-  \end{centering}
+    \end{center}
+  \end{multicols}
+\end{frame}
+
+\begin{frame}{Communication}{Server-Client-Runner Talk}
+  \begin{multicols}{2}
+    \begin{centering}
+      \pgfimage[height=6cm]{images/server-client-timeline-4.png}
+    \end{centering}
+    \begin{center}
+      {\huge Step 4}\\
+          \begin{itemize}
+          \item {\large Let the party begin, \emph{execute the pruned tests}}
+          \item {\large Continue capturing test-result/test-time as the suites run}
+          \end{itemize}
+    \end{center}
+  \end{multicols}
+\end{frame}
+
+\begin{frame}{Communication}{Server-Client-Runner Talk}
+  \begin{multicols}{2}
+    \begin{centering}
+      \pgfimage[height=6cm]{images/server-client-timeline-5.png}
+    \end{centering}
+    \begin{center}
+      {\huge Step 5}\\
+      \quad\\
+          {\large Some feedback to the server; post test-run-time/test-results back, seeding data for future runs}
+    \end{center}
+  \end{multicols}
+\end{frame}
+
+
+\begin{frame}{Communication}{Server-Client-Runner Talk}
+  \begin{multicols}{2}
+    \begin{centering}
+      \pgfimage[height=6cm]{images/server-client-timeline-6.png}
+    \end{centering}
+    \begin{center}
+      {\huge Step 6}\\
+      \quad\\
+          {\large Terminate gracefully; build task returns}
+    \end{center}
+  \end{multicols}
 \end{frame}
 
 \begin{frame}{Ok enough of handwaving!}
@@ -371,6 +406,7 @@
     \item You can create your custom balancing algorithm, and use it with TLB
     \item The contract is enforced by a java \text{abstract class} called \emph{TestSplitterCriteria}
     \item If it can potentially fail in some situations and you want a fallback, you can use \emph{DefaultingTestSplitterCriteria} with your balancer in chain
+    \item Note: Algorithm need to be repeatable, since its executed on every partition. \emph{Mutual-exclusion \& Collective-exhausion} are imparative.
     \end{itemize}
   \end{center}
 \end{frame}
@@ -501,8 +537,6 @@
   * http://github.com/test-load-balancer/tlb/issues\\
   \end{centering}
 \end{frame}
-
-
 
 % All of the following is optional and typically not needed. 
 %% \appendix
