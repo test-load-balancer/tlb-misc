@@ -36,8 +36,6 @@
 {XConf Pune, 2010}
 
 \subject{Introduction to internals of TLB, and its usage}
-% \pgfdeclareimage[height=0.5cm]{logo}{logo-filename}
-% \logo{\pgfuseimage{logo}}
 
 \AtBeginSubsection[]
 {
@@ -55,6 +53,19 @@
   \titlepage
 \end{frame}
 
+\begin{frame}{Whats in it for me?}
+  \begin{centering}
+     {\large What can I expect out of this session?}\\
+     \quad\\
+    \begin{itemize}
+      \item A small, hopefully interesting, story that describes \emph{a problem}
+      \item How we solved \emph{that problem}
+      \item How we can help you solve it
+      \item How you can help us, help others solve it!
+    \end{itemize}
+  \end{centering}
+\end{frame}
+
 \begin{frame}{Outline}
   \tableofcontents
   % You might wish to add the option [pausesections]
@@ -63,6 +74,12 @@
 \section{Motivation}
 
 \subsection{Problem that we solved}
+
+\begin{frame}
+  \begin{center}
+    {\huge The Story}
+  \end{center}
+\end{frame}
 
 \begin{frame}{This is the story of how we went from...}
   \begin{centering}
@@ -109,7 +126,7 @@
   \end{centering}
 \end{frame}
 
-\begin{frame}{but...}
+\begin{frame}{Also we know that...}
   \begin{centering}
     \begin{itemize}
     \item Major part of build time is spent in running tests
@@ -121,7 +138,7 @@
   \end{centering}
 \end{frame}
 
-\begin{frame}{Usual ways}
+\begin{frame}{Common solutions...}
   \begin{centering}
     \begin{itemize}
     \item Split applications into modules
@@ -141,8 +158,11 @@
       \end{itemize}
     \end{itemize}
     \pause
-    Logical! but Suboptimal :-(
   \end{centering}
+  \pause
+  Logical! but Suboptimal :-(\\
+  \pause
+  Nither too efficient nor effective.
 \end{frame}
 
 \section{TLB}
@@ -156,104 +176,25 @@
     \pause
   \item Understands which partition the \emph{current test runner process} is
     \pause
-  \item Runs only \texttt{one} of the \texttt{n} \emph{mutually exclusive \& collectively exhaustive} sets
+  \item Each partition runs only \texttt{one} of the \texttt{n} \emph{mutually exclusive \& collectively exhaustive} sets
   \end{itemize}
 \end{frame}
 
-
-\begin{frame}{Count-based Balancing}
-  \begin{centering}
-    20 tests / 4 splits $\approx$ 5 on each
-  \end{centering}
-\end{frame}
-
-\begin{frame}{Time-based Balancing}{inspired by Amdahl`s law}
-  N tests / 4 splits $\approx$ 4 splits that take equal time
-\end{frame}
-
-\begin{frame}{Smoothened Time-based Balancing}{ensures no outliers}
-  N tests / 4 splits $\approx$ 4 splits which take equal time based on history over past runs (Exponential smoothing ensures no outliers)\\
-  While exponential smoothing, every test-time entry $ S_t \quad \forall t > 0 $ is recorded as:\\
-  \begin{alignat}{3}
-    S_1 & = x_o\\
-    S_t & = \alpha x_{t-1} + (1 - \alpha)S_{t-1} \quad
-    \forall 
-    \begin{cases}
-      t > 1\\ 
-      0 < \alpha < 1
-    \end{cases}
-  \end{alignat}
-
-  Where $\alpha$ is the factor of smoothing, which can be tuned externally and \texttt{x} is unsmoothed reading.
-\end{frame}
-
-\begin{frame}{Failed First Orderer}{Runs tests that failed last time around, first}
-  Perfect for fixing builds that have a tendency to break after 6 in the evening.\\
-  \quad\\
-  You don\text{'}t need to wait for the entire build, just watch the console log for a few minutes, as you see the test you fixed pass and scroll by.
-\end{frame}
-
-\subsection{Hooking it up with your testing tool/CI server}
-
-\begin{frame}{Supported Frameworks}
-  \begin{centering}
-    \begin{itemize}
-      \item {\color{green}Junit}, {\color{green}Twist} using {\color{red}Ant} or {\color{red}Buildr} for {\color{blue}Java}
-        \pause
-      \item {\color{green}Rspec} using {\color{red}Rake} (for both {\color{blue}MRI} and {\color{blue}JRuby})
-    \end{itemize}
-  \end{centering}
-\end{frame}
-
-\begin{frame}{We plan to support...}
-  \begin{centering}
-    \begin{itemize}
-    \item {\color{green}TestUnit} {\color{blue}MRI \& JRuby}
-    \item {\color{red}Nant} {\color{blue}.Net}
-    \item {\color{green}MSTest} {\color{blue}.Net}
-    \item {\color{green}TestNG} {\color{blue}Java}
-    \item {\color{red}Maven} {\color{blue}Java}
-    \item {\color{green}PyUnit} {\color{blue}Python}
-    \item {\color{green}Cucumber} {\color{blue}MRI \& JRuby}
-    \item {\color{green}CPPUnit} {\color{blue} C++}
-    \item {\color{green} 5am (fiveam)} {\color{blue} CommonLisp}
-    \end{itemize}
-  \end{centering}
+\begin{frame}{For example:}
+  Some potential balancing strategies could be
   \pause
+  \begin{itemize}
+    \item Partition tests to make every set have equal number of tests
+      \pause
+    \item Or to have every set take about the same time to finish
+  \end{itemize}
+  \pause
+  Some of these strategies require a central place to store and retrive test-data(running-time, result etc)
+\end{frame}
+
+\begin{frame}{Setup}{Typical Setup}
   \begin{centering}
-    \begin{itemize}
-      \item Bad news is, we haven't started work on most of these yet.
-        \pause
-      \item Good news is, we have good hackers, like yourself, listening to us here, who can help!
-    \end{itemize}
-  \end{centering}
-\end{frame}
-
-\begin{frame}{And we plan to support...}
-  \begin{center}
-    Anything else that you would like to contribute :-)
-  \end{center}
-\end{frame}
-
-\begin{frame}{Leverage parallel execution capabilities of}{tools like...}
-  \begin{center}
-    \pgfimage[height=1.5cm]{images/go-logo.png}
-  \end{center}
-\end{frame}
-
-\begin{frame}{or for that matter}
-  \begin{center}
-    {\huge Hudson, Bamboo, TeamCity, Ant Hill Pro}(if you are rich enough),{\huge or even Shell script fork}(if you are a poor dev like us).\\
-    \quad\\\quad\\
-    {\footnotesize PS: You did not see this slide :-)}
-  \end{center}
-\end{frame}
-
-\subsection{Under the hood}
-
-\begin{frame}{Typical TLB setup}
-  \begin{centering}
-  \pgfimage[width=9.5cm]{images/typical-setup.png}
+    \pgfimage[width=9.5cm]{images/typical-setup.png}
   \end{centering}
 \end{frame}
 
@@ -315,7 +256,6 @@
   \end{centering}
 \end{frame}
 
-
 \begin{frame}{Communication}{Server-Client-Runner Talk}
   \begin{centering}
     \pgfimage[height=6cm]{images/server-client-timeline-5.png}
@@ -329,11 +269,219 @@
     \begin{multicols}{2}
       \pgfimage[height=6cm]{images/server-client-timeline-6.png}
       \begin{itemize}
-        \item foo
-        \item bar
+      \item foo
+      \item bar
       \end{itemize}
     \end{multicols}
   \end{centering}
+\end{frame}
+
+\begin{frame}{Ok enough of handwaving!}
+  \begin{center}
+    Well, that was all too abstract, lets see what TLB has to offer in terms of concrete features.
+  \end{center}
+\end{frame}
+
+\subsection{Concepts in TLB}
+
+\begin{frame}{TLB Client}{the workhorse}
+  TLB client has two major sub-units.
+  \pause
+  \quad\\
+  \begin{itemize}
+  \item Balancer - \emph{the pruner guy} ({\small chosen by setting an environment variable \text{TLB\_CRITERIA}})
+    \quad\\
+    \pause
+  \item Orderer - \emph{the shuffler guy} ({\small chosen by setting an environment variable \text{TLB\_ORDERER}})
+  \end{itemize}
+  {\tiny both environment variables require fully qualified java class-names}
+\end{frame}
+
+\begin{frame}{TLB Client}{Balancer}
+  \begin{center}
+    {\large Count-based Balancing}\\
+    \quad\\
+    \quad\\
+    20 tests / 4 splits = 5 tests on each\\
+    \quad\\
+    \quad\\
+    \begin{itemize}
+    \item Conceptually straight-forward
+    \item Inefficient in practice
+    \item TLB uses this as a fallback, not recomended as preffered algorithm
+    \end{itemize}
+  \end{center}
+\end{frame}
+
+\begin{frame}{TLB Client}{Balancer}
+  \begin{center}
+    {\large Time-based Balancing}\\
+    {\tiny (inspired by Amdahl`s law)}\\
+    \quad\\
+    \quad\\
+    N tests / 4 splits $\approx$ 4 splits that take equal time
+    \quad\\
+    \quad\\
+    \begin{itemize}
+    \item Much better, yields fairly close to ideal solution
+    \item One slow machine can not only slow down the current run, but skew balancing on the next one too
+    \end{itemize}
+  \end{center}
+\end{frame}
+
+\begin{frame}{TLB Client}{Balancer}
+  \begin{center}
+    {\large Smoothened Time-based Balancing}\\
+    {\tiny (Ensures no outliers, builds on top of time based balancing)}\\
+    \quad\\
+    {\small N tests / 4 splits $\approx$ 4 splits which take equal time based on history over past few/several runs \\
+    While exponential smoothing, every test-time entry $ S_t \quad \forall t > 0 $ is recorded as:}
+    \begin{alignat}{3}
+      S_1 & = x_o\\
+      S_t & = \alpha x_{t-1} + (1 - \alpha)S_{t-1} \quad
+      \forall 
+      \begin{cases}
+        t > 1\\ 
+        0 < \alpha < 1
+      \end{cases}
+    \end{alignat}
+    {\tiny Where $\alpha$ is the factor of smoothing, which can be tuned externally and \texttt{x} is unsmoothed reading.}
+  \end{center}
+\end{frame}
+
+\begin{frame}{TLB Client}{Balancer}
+  \begin{center}
+    {\large Default-chain Balancing}\\
+    \quad\\
+    \begin{itemize}
+    \item Allows users to define \emph{criteria chain}, which is a COLON(\text{:}) seperated list of algorithms
+    \item The chain may include some custom balancer recepies of your own
+    \item Used to ensure build doesn't fail when no data available to do advanced algorithms like Time-balance
+    \item Allows defaulting to simpler algorithms like Count-balancing
+    \end{itemize}
+  \end{center}
+\end{frame}
+
+\begin{frame}{TLB Client}{Balancer}
+  \begin{center}
+    {\large *XYZ* Balancing}\\
+    {\tiny (This is not a canned algorithm, its something you can create)}\\
+    \quad\\
+    \begin{itemize}
+    \item You can create your custom balancing algorithm, and use it with TLB
+    \item The contract is enforced by a java \text{abstract class} called \emph{TestSplitterCriteria}
+    \item If it can potentially fail in some situations and you want a fallback, you can use \emph{DefaultingTestSplitterCriteria} with your balancer in chain
+    \end{itemize}
+  \end{center}
+\end{frame}
+
+\begin{frame}{TLB Client}{Orderer}
+  \begin{center}
+    {\large Failed First Orderer}\\
+    {\tiny (Runs tests that failed last time around, first)}\\
+    \begin{itemize}
+      \item Perfect for fixing builds that have a tendency to break after 6 in the evening
+      \item You don\text{'}t need to wait for the entire build, just watch the console log for a few minutes, as you see the test you fixed pass and scroll by
+    \end{itemize}
+  \end{center}
+\end{frame}
+
+\begin{frame}{TLB Client}{Orderer}
+  \begin{center}
+    {\large *ABC* Orderer}\\
+    {\tiny (This is not a canned algorithm, its something you can create)}\\
+    \quad\\
+    \begin{itemize}
+    \item You can create your custom ordering algorithm, and use it with TLB
+    \item The contract is enforced by a java \text{abstract class} called \emph{TestOrderer}
+    \item Ordering tests to ensure execution-order/side-effects is a slippery slope and is considered an \emph{ANTI PATTERN}, so we strongly recomend not abusing Ordering facility
+    \end{itemize}
+  \end{center}
+\end{frame}
+
+\subsection{Show me the code honey!}
+
+\begin{frame}
+  \begin{centering}
+    {\small TLB Client needs to embed in build environment and interact with a testing-framework}
+    \quad\\
+    \quad\\
+    \pause
+    \begin{itemize}
+    \item Balancing JUnit test-suite using Apache-Ant
+      \pause
+    \item Balancing RSpec test-suite using Rake
+    \pause
+   \item Using TLB on the Sears-Commercial RSpec suite \\
+     {\small Thanks Jaju, for taking all the hell we gave you! :-)}
+     \begin{itemize}
+     \item {\small In all modesty, it took us half-an-hour to setup once we could build locally, the searial way. ;-)}
+     \end{itemize}
+    \end{itemize}
+  \end{centering}
+\end{frame}
+
+\subsection{Hooking TLB up with your build process}
+
+\begin{frame}{Leverage parallel execution capabilities of}{tools like...}
+  \begin{center}
+    \pgfimage[height=1.5cm]{images/go-logo.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}{or for that matter}
+  \begin{center}
+    {\huge Hudson, Bamboo, TeamCity, Ant Hill Pro}(if you are rich enough),{\huge or even Capistrano/Shell script fork}(if you are a poor dev like us).\\
+    \quad\\\quad\\
+        {\footnotesize PS: You did not see this slide :-)}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Supported Frameworks}
+  \begin{centering}
+    \begin{itemize}
+      \item {\color{green}Junit} using {\color{red}Ant} or {\color{red}Buildr} for {\color{blue}Java}
+        \pause
+      \item {\color{green}Twist} using {\color{red}Ant} or {\color{red}Buildr} for {\color{blue}Java}
+        \pause
+      \item {\color{green}Rspec} using {\color{red}Rake} for both {\color{blue}MRI} and {\color{blue}JRuby}
+    \end{itemize}
+  \end{centering}
+\end{frame}
+
+\begin{frame}{We plan to support...}
+  \begin{centering}
+    \begin{multicols}{2}
+      \begin{itemize}
+      \item {\color{green}NUnit} on {\color{blue}.Net}
+      \item {\color{green}MS Test} on {\color{blue}.Net}
+      \item {\color{green}TestUnit} on {\color{blue}MRI \& JRuby}
+      \item {\color{green}Cucumber} on {\color{blue}MRI \& JRuby}
+      \item {\color{green}TestNG} on {\color{blue}Java}
+      \item {\color{green}PyUnit} on {\color{blue}Python}
+      \item {\color{green}CPPUnit} on {\color{blue} C++}
+      \item {\color{green}5am (fiveam)} on {\color{blue} CommonLisp}
+      \end{itemize}
+      \begin{itemize}
+      \item {\color{red}NAnt} on {\color{blue}.Net}
+      \item {\color{red}MS Build} on {\color{blue}.Net}
+      \item {\color{red}Maven} on {\color{blue}Java}
+      \end{itemize}
+    \end{multicols}
+  \end{centering}
+\end{frame}
+
+\begin{frame}{While thats our wish-list}
+  \begin{center}
+    \begin{itemize}
+    \item Bad news is, we haven't started work on most of these yet.\\
+      \pause
+    \item Good news is, we have good hackers, like yourself, listening to us here, who can help!
+    \end{itemize}
+    \pause
+    \quad\\
+    We'd love to support anything else that you can make time to contribute :-)
+  \end{center}
 \end{frame}
 
 \section*{Summary}
