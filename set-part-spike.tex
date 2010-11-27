@@ -1,0 +1,350 @@
+\documentclass{beamer}
+\mode<presentation>{\usetheme{Warsaw} \setbeamercovered{transparent}}
+
+
+\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage{multicol}
+
+\title[SetPart - https://github.com/test-load-balancer/set-part]{SetPart}
+
+\subtitle{genetic algoritm based set partitioning algoritm}
+
+\author[Pavan, Janmejay]{Pavan KS\inst{1} \and Janmejay Singh\inst{2}}
+
+\institute[ThoughtWorks Studios]{
+  \inst{1}%
+  mail: itspanzi@gmail.com\\
+  blog: http://itspanzi.blogspot.com
+  \and
+  \inst{2}%
+  mail: singh.janmejay@gmail.com\\
+  blog: http://codehunk.wordpress.com }
+
+\date[set-part]{Course Project Evaluation(CCE), 2010}
+
+\subject{Introduction to the problem}
+
+\AtBeginSubsection[]{ \begin{frame}<beamer>{Outline} \tableofcontents[currentsection,currentsubsection] \end{frame} }
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents
+  % You might wish to add the option [pausesections]
+\end{frame}
+
+\section{Motivation}
+
+\subsection{Description of the problem}
+
+\begin{frame}{Informal definition}
+  \begin{center}
+    A partition of a set \text{X} is a division of \text{X} into non-overlapping and non-empty \text{"parts"} or \text{"blocks"} or \text{"cells"} that cover all of \text{X}. More formally, these \text{"cells"} are both \emph{collectively exhaustive} and \emph{mutually exclusive} with respect to the \text{set being partitioned}.
+  \end{center}
+\end{frame}
+
+\begin{frame}{Correct solution}
+  \begin{center}
+    In mathematical notation, these two conditions can be represented as\\
+    \quad
+    \begin{alignat}{3}
+      \bigcup P = X \quad \quad \quad \quad\\
+      A \cap B = \varnothing \quad \quad
+      \forall 
+      \begin{cases}
+        A \subset X\\
+        B \subset X\\
+        A \neq B\\
+      \end{cases}
+    \end{alignat}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Optimal solution}
+  \begin{center}
+    Optimal solution can be obtained by minimizing, the following expression.\\
+    \quad
+    \begin{alignat}{3}
+      D ( A_1, A_2, ... A_n) = max \left \{ \sum_{x \in A_i} x \right \} - min \left \{ \sum_{x \in A_j} x \right \}
+    \end{alignat}\\
+    \quad \\
+    Its ideal when global minima for this function is reached.
+  \end{center}
+\end{frame}
+
+\begin{frame}{But set-partioning is an...}
+  \begin{center}
+    {\huge NP-complete problem}\\
+    \quad \\
+    \pause
+    \quad \\
+    Finding a polynomial time solution is not possible unless \text{P = NP}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Applications in real world}
+  \begin{centering}
+    \begin{itemize}
+    \item Scheduling \text{X} tasks on \text{K} identicial processors
+      \pause
+    \item Airline crew scheduling
+      \pause
+    \item Truck delivery management etc.
+    \end{itemize}
+  \end{centering}
+\end{frame}
+
+\subsection{Common solutions...}
+
+\begin{frame}{Deterministic approach}{Greedy algorithm}
+  \begin{centering}
+    \begin{itemize}
+    \item Sort U(elements) in decending order of weights
+      \pause
+    \item Sort B(bags) in ascending order
+      \pause
+    \item Remove the first/maximum-value element from U
+      \pause
+    \item Add P it to the first/lowest-weight bag B
+      \pause
+
+    \end{itemize}
+  \end{centering}
+\end{frame}
+
+\begin{frame}{Deterministic approach}{Differencing algorithm}
+  \begin{centering}
+    \begin{itemize}
+    \item Select $$x_i\quad and\quad x_j\quad :\quad | x_i - x_j |\quad where\quad  x_n \in U$$
+      \pause
+    \item Ensure $$x_i\quad and\quad x_j$$ go in different bags
+      \pause
+    \item Reinsert the difference back in U
+      \pause
+    \item Repeat from the first step until $$U = \varnothing$$
+      \pause
+    \item Read the allocation backwards while subtracting the inserted members to get fair sets
+    \end{itemize}
+    \pause
+  \end{centering}
+\end{frame}
+
+\section{Genetic Algorithm}
+
+\subsection{Methodology}
+
+\begin{frame}{Representation}p
+  \begin{itemize}
+  \item Every bag/set is a single parent chromosome strand
+    \pause
+  \item It can be thought of as a bit string
+  \end{itemize}
+  \pause
+  For instance, if
+  \begin{alignat}{3}
+    U = \left \{ x_o, x_1, x_2 ... x_{n-1} \right \} 
+  \end{alignat}
+  And 0...n-1 being indexes of bitstring
+  The act of selecting or rejecting becomes $$ x_i \in \left \{\quad 0,\quad 1\quad\right \}$$
+  Where 1 means selection and 0 means rejection
+\end{frame}
+
+\begin{frame}{Representation}
+  While the result of selecting a given sub-strand is uniquely identified, this can be simplified to be
+  \pause
+  \begin{itemize}
+  \item A list elements the belong to 
+    \begin{alignat}{3}
+      A_i\quad 
+      \begin{cases}
+        \quad 1\quad <\quad i\quad <\quad k
+      \end{cases}
+    \end{alignat}
+    \pause
+  \item A cross-over can hence be represented as exchanging
+    \begin{alignat}{3}
+      x_{i}...x_{i + \delta}\quad and\quad y_{j}...y_{j + \delta'}
+      \begin{cases}
+        x \in Parent A_x\\
+        y \in Parent A_y\\
+        while\quad A_x\quad and\quad A_y\quad are parents
+      \end{cases}
+    \end{alignat}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Fitness Fn}{means of improvement}
+  \begin{center}
+    The new generation
+    \begin{alignat}{2}
+      A_x' =x_1...x_{i} + y_j...y_{j + \delta'} + x_{j+\delta+1}...x_n\\
+      A_y' =y_1...y_{j} + x_i...x_{i + \delta} + y_{j+\delta'+1}...y_m
+    \end{alignat}
+    Can be considered better than parents $$A_x\quad and\quad A_y\quad iff:$$
+    \begin{alignat}{2}
+      SD(A_x,A_y) > SD(A_x', A_y') 
+      \begin{cases}
+        \bar{A} = \frac{\sum_{i=1}^XU_{x_i}}{k}\quad :\quad k = no.\quad of\quad bags
+      \end{cases}
+    \end{alignat}
+    This is just one way to mesure the evolution of the new generation.\\
+  \end{center}
+\end{frame}
+
+\begin{frame}{Termination}{No of generations}
+  \begin{center}
+    {\large First cut of the algorithm terminates after a pre-defined number of iterations}\\
+    \quad\\
+    {\small We are studying it further to build huristics to terminate it more aggresively }
+  \end{center}
+\end{frame}
+
+\subsection{Experiments \& Result}
+
+\begin{frame}{Random numbers}{0 < n < 100; 10 generations}
+  \begin{centering}
+    \pgfimage[width=11cm]{images/under-100-random-nos-10.png}
+  \end{centering}
+\end{frame}
+
+\begin{frame}{Random numbers}{0 < n < 100; 100 generations}
+  \begin{centering}
+    \pgfimage[width=11cm]{images/under-100-random-nos-100.png}
+  \end{centering}
+\end{frame}
+
+\begin{frame}{Random numbers}{0 < n < 100; 1000 generations}
+  \begin{centering}
+    \pgfimage[width=11cm]{images/under-100-random-nos-1000.png}
+  \end{centering}
+\end{frame}
+
+\begin{frame}{Random numbers}{0 < n < 10000; 10 generations}
+  \begin{centering}
+    \pgfimage[width=11cm]{images/under-10000-random-nos-10.png}
+  \end{centering}
+\end{frame}
+
+\begin{frame}{Random numbers}{0 < n < 10000; 100 generations}
+  \begin{centering}
+    \pgfimage[width=11cm]{images/under-10000-random-nos-100.png}
+  \end{centering}
+\end{frame}
+
+\begin{frame}{Random numbers}{0 < n < 10000; 1000 generations}
+  \begin{centering}
+    \pgfimage[width=11cm]{images/under-10000-random-nos-1000.png}
+  \end{centering}
+\end{frame}
+
+\begin{frame}{Random numbers}{0 < n < 10000; 10000 generations}
+  \begin{centering}
+    \pgfimage[width=11cm]{images/under-10000-random-nos-10000.png}
+  \end{centering}
+\end{frame}
+
+\begin{frame}{Band distribution of numbers}{0 < 60\%X'es < 20\%; 60\% < 20\%X'es < 80\%; 80\% < 20\%X'es; 10000 generations}
+  \begin{centering}
+    \pgfimage[width=11cm]{images/band-nos-10000-iter.png}
+  \end{centering}
+\end{frame}
+
+\subsection{Future direction}
+
+\begin{frame}{More deterministic crossover}
+  \begin{centering}
+    \begin{itemize}
+      \item First few crossovers can be made more deterministic
+        \pause
+      \item Until it becomes harder to do deterministic crossovers
+        \pause
+      \item Match inverted bell curve to bring higher-parent down to mean
+        \pause
+      \item At the same time, bring lower-parent up to mean
+    \end{itemize}
+  \end{centering}
+\end{frame}
+
+\begin{frame}{Parallel evolution}
+  \begin{centering}
+    \begin{itemize}
+    \item Multicore machines are now cheep
+      \pause
+    \item Run generations in-parallel
+      \pause
+    \item Have barriers to sync, carry forward only best few
+      \pause
+    \item Say 50\% of not-so-evolved generations get dropped
+      \pause
+    \item The other 50\% get double up to make up for the dropped ones, and continue evolving
+    \end{itemize}
+  \end{centering}
+\end{frame}
+
+\begin{frame}{Other things to try}
+  \begin{centering}
+    \begin{itemize}
+    \item Find benchmark data, run with it
+      \pause
+    \item Compare with approximation algorithms(greedy, differential)
+      \pause
+    \item Permute/Bruteforce to get ideal partitioning, compare with it
+      \pause
+    \item Get test-case time data, see how it specifically behaves for real world test-times distribution
+      \pause
+    \item Integrate with TLB, see how it performs on the floor
+    \end{itemize}
+  \end{centering}
+\end{frame}
+
+\section*{Thank you}
+
+\begin{frame}{Thank you}
+  \begin{centering}
+    \quad\\
+        {\huge Thank you.}\\
+        \quad\\
+        \quad\\
+        References:\\
+        http://github.com/test-load-balancer/set-part\\
+  \end{centering}
+\end{frame}
+
+% All of the following is optional and typically not needed. 
+%% \appendix
+%% \section<presentation>*{\appendixname}
+%% \subsection<presentation>*{For Further Reading}
+
+%% \begin{frame}[allowframebreaks]
+%%   \frametitle<presentation>{For Further Reading}
+
+%%   \begin{thebibliography}{10}
+
+%%   \beamertemplatebookbibitems
+%%   % Start with overview books.
+
+%%   \bibitem{Author1990}
+%%     A.~Author.
+%%     \newblock {\em Handbook of Everything}.
+%%     \newblock Some Press, 1990.
+
+
+%%   \beamertemplatearticlebibitems
+%%   % Followed by interesting articles. Keep the list short. 
+
+%%   \bibitem{Someone2000}
+%%     S.~Someone.
+%%     \newblock On this and that.
+%%     \newblock {\em Journal of This and That}, 2(1):50--100,
+%%     2000.
+%%   \end{thebibliography}
+%% \end{frame}
+
+\end{document}
