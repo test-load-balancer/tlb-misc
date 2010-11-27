@@ -74,457 +74,492 @@
     \begin{alignat}{3}
       D ( A_1, A_2, ... A_n) = max \left \{ \sum_{x \in A_i} x \right \} - min \left \{ \sum_{x \in A_j} x \right \}
     \end{alignat}\\
-    \quad
-    Its ideal when global minima of this function is reached.
+    \quad \\
+    Its ideal when global minima for this function is reached.
   \end{center}
 \end{frame}
 
-\begin{frame}{Also we know that...}
+\begin{frame}{But set-partioning is an...}
+  \begin{center}
+    {\huge NP-complete problem}\\
+    \quad \\
+    \pause
+    \quad \\
+    Finding a polynomial time solution is not possible unless \text{P = NP}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Applications in real world}
   \begin{centering}
     \begin{itemize}
-    \item Major part of build time is spent in running tests
+    \item Scheduling \text{X} tasks on \text{K} identicial processors
       \pause
-    \item Speeding up builds is non trivial
+    \item Airline crew scheduling
       \pause
-    \item Most TW teams have a dev task for this don\text{'}t they??
+    \item Truck delivery management etc.
     \end{itemize}
   \end{centering}
 \end{frame}
 
-\begin{frame}{Common solutions...}
+\subsection{Common solutions...}
+
+\begin{frame}{Deterministic approach}{Greedy algorithm}
   \begin{centering}
     \begin{itemize}
-    \item Split applications into modules
+    \item Sort U(elements) in decending order of weights
       \pause
-      \begin{itemize}
-      \item Difficult to model (typically end up in diamond dependencies)
-        \pause
-      \item If downstream dependencies fail, turn around time to fix is huge
-      \end{itemize}      
+    \item Sort B(bags) in ascending order
       \pause
-    \item Throw more hardware at it - Slice and dice
+    \item Remove the first/maximum-value element from U
       \pause
-      \begin{itemize}
-      \item Hand written partitioning using directories/tags etc (unequal partitions)
-        \pause
-      \item Pipelines (unit -> integration -> smoke -> functional) (serial process)
-      \end{itemize}
+    \item Add P it to the first/lowest-weight bag B
+      \pause
+
+    \end{itemize}
+  \end{centering}
+\end{frame}
+
+\begin{frame}{Deterministic approach}{Differencing algorithm}
+  \begin{centering}
+    \begin{itemize}
+    \item Select $$x_i\quad and\quad x_j\quad :\quad | x_i - x_j |\quad where\quad  x_n \in U$$
+      \pause
+    \item Ensure $$x_i\quad and\quad x_j$$ go in different bags
+      \pause
+    \item Reinsert the difference back in U
+      \pause
+    \item Repeat from the first step until $$U = \varnothing$$
+      \pause
+    \item Read the allocation backwards while subtracting the inserted members to get fair sets
     \end{itemize}
     \pause
   \end{centering}
-  \pause
-  Logical! but Suboptimal :-(\\
-  \pause
-  Nither too efficient nor effective.
 \end{frame}
 
-\section{TLB}
+\section{Genetic Algorithm}
 
-\subsection{Introducing TLB}
+\subsection{Methodology}
 
-\begin{frame}{What if partitioning can be off-loaded?}
-  What does TLB do?
+\begin{frame}{Representation}
   \begin{itemize}
-  \item Makes \texttt{n} partitions
+  \item Every bag/set is a single parent chromosome strand
     \pause
-  \item Understands which partition the \emph{current test runner process} is
+  \item It can be thought of as a bit string
+  \end{itemize}
+  \pause
+  For instance, if
+  \begin{alignat}{3}
+    U = \left \{ x_o, x_1, x_2 ... x_{n-1} \right \} 
+  \end{alignat}
+  And 0...n-1 being indexes of bitstring
+  The act of selecting or rejecting becomes $$ x_i \in \left \{\quad 0,\quad 1\quad\right \}$$
+  Where 1 means selection and 0 means rejection
+\end{frame}
+
+\begin{frame}{Representation}
+  While the result of selecting a given sub-strand is uniquely identified, this can be simplified to be
+  \pause
+  \begin{itemize}
+  \item A list elements the belong to 
+    \begin{alignat}{3}
+      A_i\quad 
+      \begin{cases}
+        \quad 1\quad <\quad i\quad <\quad k
+      \end{cases}
+    \end{alignat}
     \pause
-  \item Each partition runs only \texttt{one} of the \texttt{n} \emph{mutually exclusive \& collectively exhaustive} sets
+  \item A cross-over can hence be represented as exchanging
+    \begin{alignat}{3}
+      x_{i}...x_{i + \delta}\quad and\quad y_{j}...y_{j + \delta'}
+      \begin{cases}
+        x \in Parent A_x\\
+        y \in Parent A_y\\
+        while\quad A_x\quad and\quad A_y\quad are parents
+      \end{cases}
+    \end{alignat}
   \end{itemize}
 \end{frame}
 
-\begin{frame}{For example:}
-  Some potential balancing strategies could be
-  \pause
-  \begin{itemize}
-  \item Partition tests to make every set have equal number of tests
-    \pause
-  \item Or to have every set take about the same time to finish
-  \end{itemize}
-  \pause
-  Some of these strategies require a central place to store and retrive test-data(running-time, result etc)
-\end{frame}
+%% \begin{frame}{Setup}{Typical Setup}
+%%   \begin{centering}
+%%     \pgfimage[width=9.5cm]{images/typical-setup.png}
+%%   \end{centering}
+%% \end{frame}
 
-\begin{frame}{Setup}{Typical Setup}
-  \begin{centering}
-    \pgfimage[width=9.5cm]{images/typical-setup.png}
-  \end{centering}
-\end{frame}
+%% \begin{frame}{Setup}{Tlb Server}
+%%   \begin{centering}
+%%     \pgfimage[width=9.5cm]{images/server-focused.png}
+%%   \end{centering}
+%% \end{frame}
 
-\begin{frame}{Setup}{Tlb Server}
-  \begin{centering}
-    \pgfimage[width=9.5cm]{images/server-focused.png}
-  \end{centering}
-\end{frame}
+%% \begin{frame}{Setup}{Tlb Client}
+%%   \begin{centering}
+%%     \pgfimage[width=9.5cm]{images/client-focused.png}
+%%   \end{centering}
+%% \end{frame}
 
-\begin{frame}{Setup}{Tlb Client}
-  \begin{centering}
-    \pgfimage[width=9.5cm]{images/client-focused.png}
-  \end{centering}
-\end{frame}
+%% \begin{frame}{Setup}{Server-Client Communication}
+%%   \begin{centering}
+%%     \pgfimage[width=9.5cm]{images/server-client-communication-focused.png}
+%%   \end{centering}
+%% \end{frame}
 
-\begin{frame}{Setup}{Server-Client Communication}
-  \begin{centering}
-    \pgfimage[width=9.5cm]{images/server-client-communication-focused.png}
-  \end{centering}
-\end{frame}
+%% \begin{frame}{Setup}{Test Runner}
+%%   \begin{centering}
+%%     \pgfimage[width=9.5cm]{images/runner-focused.png}
+%%   \end{centering}
+%% \end{frame}
 
-\begin{frame}{Setup}{Test Runner}
-  \begin{centering}
-    \pgfimage[width=9.5cm]{images/runner-focused.png}
-  \end{centering}
-\end{frame}
+%% \begin{frame}{Setup}{Client-Runner Communication}
+%%   \begin{centering}
+%%     \pgfimage[width=9.5cm]{images/client-runner-communication-focused.png}
+%%   \end{centering}
+%% \end{frame}
 
-\begin{frame}{Setup}{Client-Runner Communication}
-  \begin{centering}
-    \pgfimage[width=9.5cm]{images/client-runner-communication-focused.png}
-  \end{centering}
-\end{frame}
+%% \begin{frame}{Setup}{Alien Environment Setup}
+%%   \begin{centering}
+%%     \pgfimage[width=9.5cm]{images/alien-env-setup.png}
+%%   \end{centering}
+%% \end{frame}
 
-\begin{frame}{Setup}{Alien Environment Setup}
-  \begin{centering}
-    \pgfimage[width=9.5cm]{images/alien-env-setup.png}
-  \end{centering}
-\end{frame}
+%% \begin{frame}{Communication}{Server-Client-Runner Talk}
+%%   \begin{multicols}{2}
+%%     \begin{centering}
+%%       \pgfimage[height=6cm]{images/server-client-timeline-1.png}
+%%     \end{centering}
+%%     \begin{center}
+%%       {\huge Step 1}\\
+%%       \quad\\
+%%           {\large Receive list of to-be-run tests from the testing-framework}
+%%     \end{center}
+%%   \end{multicols}
+%% \end{frame}
 
-\begin{frame}{Communication}{Server-Client-Runner Talk}
-  \begin{multicols}{2}
-    \begin{centering}
-      \pgfimage[height=6cm]{images/server-client-timeline-1.png}
-    \end{centering}
-    \begin{center}
-      {\huge Step 1}\\
-      \quad\\
-          {\large Receive list of to-be-run tests from the testing-framework}
-    \end{center}
-  \end{multicols}
-\end{frame}
+%% \begin{frame}{Communication}{Server-Client-Runner Talk}
+%%   \begin{multicols}{2}
+%%     \begin{centering}
+%%       \pgfimage[height=6cm]{images/server-client-timeline-2.png}
+%%     \end{centering}
+%%     \begin{center}
+%%       {\huge Step 2}\\
+%%       \quad\\
+%%           {\large Fetch historical test data from TLB server(tests that failed in the previous run/time taken by each test)}
+%%     \end{center}
+%%   \end{multicols}
+%% \end{frame}
 
-\begin{frame}{Communication}{Server-Client-Runner Talk}
-  \begin{multicols}{2}
-    \begin{centering}
-      \pgfimage[height=6cm]{images/server-client-timeline-2.png}
-    \end{centering}
-    \begin{center}
-      {\huge Step 2}\\
-      \quad\\
-          {\large Fetch historical test data from TLB server(tests that failed in the previous run/time taken by each test)}
-    \end{center}
-  \end{multicols}
-\end{frame}
+%% \begin{frame}{Communication}{Server-Client-Runner Talk}
+%%   \begin{multicols}{2}
+%%     \begin{centering}
+%%       \pgfimage[height=6cm]{images/server-client-timeline-3.png}
+%%     \end{centering}
+%%     \begin{center}
+%%       {\huge Step 3}\\
+%%       \begin{itemize}
+%%       \item {\large Prune the list of to-be-run tests to get tests to be actually executed(other partitions take care of pruned items)}
+%%       \item {\large Re-order the pruned list,for instance \emph{pull tests that failed in the previous run to execute first}}
+%%       \end{itemize}
+%%     \end{center}
+%%   \end{multicols}
+%% \end{frame}
 
-\begin{frame}{Communication}{Server-Client-Runner Talk}
-  \begin{multicols}{2}
-    \begin{centering}
-      \pgfimage[height=6cm]{images/server-client-timeline-3.png}
-    \end{centering}
-    \begin{center}
-      {\huge Step 3}\\
-      \begin{itemize}
-      \item {\large Prune the list of to-be-run tests to get tests to be actually executed(other partitions take care of pruned items)}
-      \item {\large Re-order the pruned list,for instance \emph{pull tests that failed in the previous run to execute first}}
-      \end{itemize}
-    \end{center}
-  \end{multicols}
-\end{frame}
+%% \begin{frame}{Communication}{Server-Client-Runner Talk}
+%%   \begin{multicols}{2}
+%%     \begin{centering}
+%%       \pgfimage[height=6cm]{images/server-client-timeline-4.png}
+%%     \end{centering}
+%%     \begin{center}
+%%       {\huge Step 4}\\
+%%       \begin{itemize}
+%%       \item {\large Let the party begin, \emph{execute the pruned tests}}
+%%       \item {\large Continue capturing test-result/test-time as the suites run}
+%%       \end{itemize}
+%%     \end{center}
+%%   \end{multicols}
+%% \end{frame}
 
-\begin{frame}{Communication}{Server-Client-Runner Talk}
-  \begin{multicols}{2}
-    \begin{centering}
-      \pgfimage[height=6cm]{images/server-client-timeline-4.png}
-    \end{centering}
-    \begin{center}
-      {\huge Step 4}\\
-      \begin{itemize}
-      \item {\large Let the party begin, \emph{execute the pruned tests}}
-      \item {\large Continue capturing test-result/test-time as the suites run}
-      \end{itemize}
-    \end{center}
-  \end{multicols}
-\end{frame}
-
-\begin{frame}{Communication}{Server-Client-Runner Talk}
-  \begin{multicols}{2}
-    \begin{centering}
-      \pgfimage[height=6cm]{images/server-client-timeline-5.png}
-    \end{centering}
-    \begin{center}
-      {\huge Step 5}\\
-      \quad\\
-          {\large Some feedback to the server; post test-run-time/test-results back, seeding data for future runs}
-    \end{center}
-  \end{multicols}
-\end{frame}
+%% \begin{frame}{Communication}{Server-Client-Runner Talk}
+%%   \begin{multicols}{2}
+%%     \begin{centering}
+%%       \pgfimage[height=6cm]{images/server-client-timeline-5.png}
+%%     \end{centering}
+%%     \begin{center}
+%%       {\huge Step 5}\\
+%%       \quad\\
+%%           {\large Some feedback to the server; post test-run-time/test-results back, seeding data for future runs}
+%%     \end{center}
+%%   \end{multicols}
+%% \end{frame}
 
 
-\begin{frame}{Communication}{Server-Client-Runner Talk}
-  \begin{multicols}{2}
-    \begin{centering}
-      \pgfimage[height=6cm]{images/server-client-timeline-6.png}
-    \end{centering}
-    \begin{center}
-      {\huge Step 6}\\
-      \quad\\
-          {\large Terminate gracefully; build task returns}
-    \end{center}
-  \end{multicols}
-\end{frame}
+%% \begin{frame}{Communication}{Server-Client-Runner Talk}
+%%   \begin{multicols}{2}
+%%     \begin{centering}
+%%       \pgfimage[height=6cm]{images/server-client-timeline-6.png}
+%%     \end{centering}
+%%     \begin{center}
+%%       {\huge Step 6}\\
+%%       \quad\\
+%%           {\large Terminate gracefully; build task returns}
+%%     \end{center}
+%%   \end{multicols}
+%% \end{frame}
 
-\begin{frame}{Ok enough of handwaving!}
-  \begin{center}
-    Well, that was all too abstract, lets see what TLB has to offer in terms of concrete features.
-  \end{center}
-\end{frame}
+%% \begin{frame}{Ok enough of handwaving!}
+%%   \begin{center}
+%%     Well, that was all too abstract, lets see what TLB has to offer in terms of concrete features.
+%%   \end{center}
+%% \end{frame}
 
-\subsection{Concepts in TLB}
+%% \subsection{Concepts in TLB}
 
-\begin{frame}{TLB Client}{the workhorse}
-  TLB client has two major sub-units.
-  \pause
-  \quad\\
-  \begin{itemize}
-  \item Balancer - \emph{the pruner guy} ({\small chosen by setting an environment variable \text{TLB\_CRITERIA}})
-    \quad\\
-    \pause
-  \item Orderer - \emph{the shuffler guy} ({\small chosen by setting an environment variable \text{TLB\_ORDERER}})
-  \end{itemize}
-      {\tiny both environment variables require fully qualified java class-names}
-\end{frame}
+%% \begin{frame}{TLB Client}{the workhorse}
+%%   TLB client has two major sub-units.
+%%   \pause
+%%   \quad\\
+%%   \begin{itemize}
+%%   \item Balancer - \emph{the pruner guy} ({\small chosen by setting an environment variable \text{TLB\_CRITERIA}})
+%%     \quad\\
+%%     \pause
+%%   \item Orderer - \emph{the shuffler guy} ({\small chosen by setting an environment variable \text{TLB\_ORDERER}})
+%%   \end{itemize}
+%%       {\tiny both environment variables require fully qualified java class-names}
+%% \end{frame}
 
-\begin{frame}{TLB Client}{Balancer}
-  \begin{center}
-    {\large Count-based Balancing}\\
-    \quad\\
-    \quad\\
-    20 tests / 4 splits = 5 tests on each\\
-    \quad\\
-    \quad\\
-    \begin{itemize}
-    \item Conceptually straight-forward
-    \item Inefficient in practice
-    \item TLB uses this as a fallback, not recomended as preffered algorithm
-    \end{itemize}
-  \end{center}
-\end{frame}
+%% \begin{frame}{TLB Client}{Balancer}
+%%   \begin{center}
+%%     {\large Count-based Balancing}\\
+%%     \quad\\
+%%     \quad\\
+%%     20 tests / 4 splits = 5 tests on each\\
+%%     \quad\\
+%%     \quad\\
+%%     \begin{itemize}
+%%     \item Conceptually straight-forward
+%%     \item Inefficient in practice
+%%     \item TLB uses this as a fallback, not recomended as preffered algorithm
+%%     \end{itemize}
+%%   \end{center}
+%% \end{frame}
 
-\begin{frame}{TLB Client}{Balancer}
-  \begin{center}
-    {\large Time-based Balancing}\\
-    {\tiny (inspired by Amdahl`s law)}\\
-    \quad\\
-    \quad\\
-    N tests / 4 splits $\approx$ 4 splits that take equal time
-    \quad\\
-    \quad\\
-    \begin{itemize}
-    \item Much better, yields fairly close to ideal solution
-    \item One slow machine can not only slow down the current run, but skew balancing on the next one too
-    \end{itemize}
-  \end{center}
-\end{frame}
+%% \begin{frame}{TLB Client}{Balancer}
+%%   \begin{center}
+%%     {\large Time-based Balancing}\\
+%%     {\tiny (inspired by Amdahl`s law)}\\
+%%     \quad\\
+%%     \quad\\
+%%     N tests / 4 splits $\approx$ 4 splits that take equal time
+%%     \quad\\
+%%     \quad\\
+%%     \begin{itemize}
+%%     \item Much better, yields fairly close to ideal solution
+%%     \item One slow machine can not only slow down the current run, but skew balancing on the next one too
+%%     \end{itemize}
+%%   \end{center}
+%% \end{frame}
 
-\begin{frame}{TLB Client}{Balancer}
-  \begin{center}
-    {\large Smoothened Time-based Balancing}\\
-    {\tiny (Ensures no outliers, builds on top of time based balancing)}\\
-    \quad\\
-        {\small N tests / 4 splits $\approx$ 4 splits which take equal time based on history over past few/several runs \\
-          While exponential smoothing, every test-time entry $ S_t \quad \forall t > 0 $ is recorded as:}
-        \begin{alignat}{3}
-          S_1 & = x_o\\
-          S_t & = \alpha x_{t-1} + (1 - \alpha)S_{t-1} \quad
-          \forall 
-          \begin{cases}
-            t > 1\\ 
-            0 < \alpha < 1
-          \end{cases}
-        \end{alignat}
-            {\tiny Where $\alpha$ is the factor of smoothing, which can be tuned externally and \texttt{x} is unsmoothed reading.}
-  \end{center}
-\end{frame}
+%% \begin{frame}{TLB Client}{Balancer}
+%%   \begin{center}
+%%     {\large Smoothened Time-based Balancing}\\
+%%     {\tiny (Ensures no outliers, builds on top of time based balancing)}\\
+%%     \quad\\
+%%         {\small N tests / 4 splits $\approx$ 4 splits which take equal time based on history over past few/several runs \\
+%%           While exponential smoothing, every test-time entry $ S_t \quad \forall t > 0 $ is recorded as:}
+%%         \begin{alignat}{3}
+%%           S_1 & = x_o\\
+%%           S_t & = \alpha x_{t-1} + (1 - \alpha)S_{t-1} \quad
+%%           \forall 
+%%           \begin{cases}
+%%             t > 1\\ 
+%%             0 < \alpha < 1
+%%           \end{cases}
+%%         \end{alignat}
+%%             {\tiny Where $\alpha$ is the factor of smoothing, which can be tuned externally and \texttt{x} is unsmoothed reading.}
+%%   \end{center}
+%% \end{frame}
 
-\begin{frame}{TLB Client}{Balancer}
-  \begin{center}
-    {\large Default-chain Balancing}\\
-    \quad\\
-    \begin{itemize}
-    \item Allows users to define \emph{criteria chain}, which is a COLON(\text{:}) seperated list of algorithms
-    \item The chain may include some custom balancer recepies of your own
-    \item Used to ensure build doesn't fail when no data available to do advanced algorithms like Time-balance
-    \item Allows defaulting to simpler algorithms like Count-balancing
-    \end{itemize}
-  \end{center}
-\end{frame}
+%% \begin{frame}{TLB Client}{Balancer}
+%%   \begin{center}
+%%     {\large Default-chain Balancing}\\
+%%     \quad\\
+%%     \begin{itemize}
+%%     \item Allows users to define \emph{criteria chain}, which is a COLON(\text{:}) seperated list of algorithms
+%%     \item The chain may include some custom balancer recepies of your own
+%%     \item Used to ensure build doesn't fail when no data available to do advanced algorithms like Time-balance
+%%     \item Allows defaulting to simpler algorithms like Count-balancing
+%%     \end{itemize}
+%%   \end{center}
+%% \end{frame}
 
-\begin{frame}{TLB Client}{Balancer}
-  \begin{center}
-    {\large *XYZ* Balancing}\\
-    {\tiny (This is not a canned algorithm, its something you can create)}\\
-    \quad\\
-    \begin{itemize}
-    \item You can create your custom balancing algorithm, and use it with TLB
-    \item The contract is enforced by a java \text{abstract class} called \emph{TestSplitterCriteria}
-    \item If it can potentially fail in some situations and you want a fallback, you can use \emph{DefaultingTestSplitterCriteria} with your balancer in chain
-    \item Note: Algorithm need to be repeatable, since its executed on every partition. \emph{Mutual-exclusion \& Collective-exhausion} are imparative.
-    \end{itemize}
-  \end{center}
-\end{frame}
+%% \begin{frame}{TLB Client}{Balancer}
+%%   \begin{center}
+%%     {\large *XYZ* Balancing}\\
+%%     {\tiny (This is not a canned algorithm, its something you can create)}\\
+%%     \quad\\
+%%     \begin{itemize}
+%%     \item You can create your custom balancing algorithm, and use it with TLB
+%%     \item The contract is enforced by a java \text{abstract class} called \emph{TestSplitterCriteria}
+%%     \item If it can potentially fail in some situations and you want a fallback, you can use \emph{DefaultingTestSplitterCriteria} with your balancer in chain
+%%     \item Note: Algorithm need to be repeatable, since its executed on every partition. \emph{Mutual-exclusion \& Collective-exhausion} are imparative.
+%%     \end{itemize}
+%%   \end{center}
+%% \end{frame}
 
-\begin{frame}{TLB Client}{Orderer}
-  \begin{center}
-    {\large Failed First Orderer}\\
-    {\tiny (Runs tests that failed last time around, first)}\\
-    \begin{itemize}
-    \item Perfect for fixing builds that have a tendency to break after 6 in the evening
-    \item You don\text{'}t need to wait for the entire build, just watch the console log for a few minutes, as you see the test you fixed pass and scroll by
-    \end{itemize}
-  \end{center}
-\end{frame}
+%% \begin{frame}{TLB Client}{Orderer}
+%%   \begin{center}
+%%     {\large Failed First Orderer}\\
+%%     {\tiny (Runs tests that failed last time around, first)}\\
+%%     \begin{itemize}
+%%     \item Perfect for fixing builds that have a tendency to break after 6 in the evening
+%%     \item You don\text{'}t need to wait for the entire build, just watch the console log for a few minutes, as you see the test you fixed pass and scroll by
+%%     \end{itemize}
+%%   \end{center}
+%% \end{frame}
 
-\begin{frame}{TLB Client}{Orderer}
-  \begin{center}
-    {\large *ABC* Orderer}\\
-    {\tiny (This is not a canned algorithm, its something you can create)}\\
-    \quad\\
-    \begin{itemize}
-    \item You can create your custom ordering algorithm, and use it with TLB
-    \item The contract is enforced by a java \text{abstract class} called \emph{TestOrderer}
-    \item Ordering tests to ensure execution-order/side-effects is a slippery slope and is considered an \emph{ANTI PATTERN}, so we strongly recomend not abusing Ordering facility
-    \end{itemize}
-  \end{center}
-\end{frame}
+%% \begin{frame}{TLB Client}{Orderer}
+%%   \begin{center}
+%%     {\large *ABC* Orderer}\\
+%%     {\tiny (This is not a canned algorithm, its something you can create)}\\
+%%     \quad\\
+%%     \begin{itemize}
+%%     \item You can create your custom ordering algorithm, and use it with TLB
+%%     \item The contract is enforced by a java \text{abstract class} called \emph{TestOrderer}
+%%     \item Ordering tests to ensure execution-order/side-effects is a slippery slope and is considered an \emph{ANTI PATTERN}, so we strongly recomend not abusing Ordering facility
+%%     \end{itemize}
+%%   \end{center}
+%% \end{frame}
 
-\subsection{Show me the code honey!}
+%% \subsection{Show me the code honey!}
 
-\begin{frame}
-  \begin{centering}
-    {\small TLB Client needs to embed in build environment and interact with a testing-framework}
-    \quad\\
-    \quad\\
-    \pause
-    \begin{itemize}
-    \item Balancing JUnit test-suite using Apache-Ant
-      \pause
-    \item Balancing RSpec test-suite using Rake
-      \pause
-    \item Using TLB on the Sears-Commercial RSpec suite \\
-      {\small Thanks Jaju, for taking all the hell we gave you! :-)}
-      \begin{itemize}
-      \item {\small In all modesty, it took us half-an-hour to setup once we could build locally, the searial way. ;-)}
-      \end{itemize}
-    \end{itemize}
-  \end{centering}
-\end{frame}
+%% \begin{frame}
+%%   \begin{centering}
+%%     {\small TLB Client needs to embed in build environment and interact with a testing-framework}
+%%     \quad\\
+%%     \quad\\
+%%     \pause
+%%     \begin{itemize}
+%%     \item Balancing JUnit test-suite using Apache-Ant
+%%       \pause
+%%     \item Balancing RSpec test-suite using Rake
+%%       \pause
+%%     \item Using TLB on the Sears-Commercial RSpec suite \\
+%%       {\small Thanks Jaju, for taking all the hell we gave you! :-)}
+%%       \begin{itemize}
+%%       \item {\small In all modesty, it took us half-an-hour to setup once we could build locally, the searial way. ;-)}
+%%       \end{itemize}
+%%     \end{itemize}
+%%   \end{centering}
+%% \end{frame}
 
-\subsection{Hooking TLB up with your build process}
+%% \subsection{Hooking TLB up with your build process}
 
-\begin{frame}{Leverage parallel execution capabilities of}{tools like...}
-  \begin{center}
-    \pgfimage[height=1.5cm]{images/go-logo.png}
-  \end{center}
-\end{frame}
+%% \begin{frame}{Leverage parallel execution capabilities of}{tools like...}
+%%   \begin{center}
+%%     \pgfimage[height=1.5cm]{images/go-logo.png}
+%%   \end{center}
+%% \end{frame}
 
-\begin{frame}{or for that matter}
-  \begin{center}
-    {\huge Hudson, Bamboo, TeamCity, Ant Hill Pro}(if you are rich enough),{\huge or even Capistrano/Shell script fork}(if you are a poor dev like us).\\
-    \quad\\\quad\\
-        {\footnotesize PS: You did not see this slide :-)}
-  \end{center}
-\end{frame}
+%% \begin{frame}{or for that matter}
+%%   \begin{center}
+%%     {\huge Hudson, Bamboo, TeamCity, Ant Hill Pro}(if you are rich enough),{\huge or even Capistrano/Shell script fork}(if you are a poor dev like us).\\
+%%     \quad\\\quad\\
+%%         {\footnotesize PS: You did not see this slide :-)}
+%%   \end{center}
+%% \end{frame}
 
-\begin{frame}{Supported Frameworks}
-  \begin{centering}
-    \begin{itemize}
-    \item {\color{green}Junit} using {\color{red}Ant} or {\color{red}Buildr} for {\color{blue}Java}
-      \pause
-    \item {\color{green}Twist} using {\color{red}Ant} or {\color{red}Buildr} for {\color{blue}Java}
-      \pause
-    \item {\color{green}Rspec} using {\color{red}Rake} for both {\color{blue}MRI} and {\color{blue}JRuby}
-    \end{itemize}
-  \end{centering}
-\end{frame}
+%% \begin{frame}{Supported Frameworks}
+%%   \begin{centering}
+%%     \begin{itemize}
+%%     \item {\color{green}Junit} using {\color{red}Ant} or {\color{red}Buildr} for {\color{blue}Java}
+%%       \pause
+%%     \item {\color{green}Twist} using {\color{red}Ant} or {\color{red}Buildr} for {\color{blue}Java}
+%%       \pause
+%%     \item {\color{green}Rspec} using {\color{red}Rake} for both {\color{blue}MRI} and {\color{blue}JRuby}
+%%     \end{itemize}
+%%   \end{centering}
+%% \end{frame}
 
-\begin{frame}{We plan to support...}
-  \begin{centering}
-    \begin{multicols}{2}
-      \begin{itemize}
-      \item {\color{green}NUnit} on {\color{blue}.Net}
-      \item {\color{green}MS Test} on {\color{blue}.Net}
-      \item {\color{green}TestUnit} on {\color{blue}MRI \& JRuby}
-      \item {\color{green}Cucumber} on {\color{blue}MRI \& JRuby}
-      \item {\color{green}TestNG} on {\color{blue}Java}
-      \item {\color{green}PyUnit} on {\color{blue}Python}
-      \item {\color{green}CPPUnit} on {\color{blue} C++}
-      \item {\color{green}5am (fiveam)} on {\color{blue} CommonLisp}
-      \end{itemize}
-      \begin{itemize}
-      \item {\color{red}NAnt} on {\color{blue}.Net}
-      \item {\color{red}MS Build} on {\color{blue}.Net}
-      \item {\color{red}Maven} on {\color{blue}Java}
-      \end{itemize}
-    \end{multicols}
-  \end{centering}
-\end{frame}
+%% \begin{frame}{We plan to support...}
+%%   \begin{centering}
+%%     \begin{multicols}{2}
+%%       \begin{itemize}
+%%       \item {\color{green}NUnit} on {\color{blue}.Net}
+%%       \item {\color{green}MS Test} on {\color{blue}.Net}
+%%       \item {\color{green}TestUnit} on {\color{blue}MRI \& JRuby}
+%%       \item {\color{green}Cucumber} on {\color{blue}MRI \& JRuby}
+%%       \item {\color{green}TestNG} on {\color{blue}Java}
+%%       \item {\color{green}PyUnit} on {\color{blue}Python}
+%%       \item {\color{green}CPPUnit} on {\color{blue} C++}
+%%       \item {\color{green}5am (fiveam)} on {\color{blue} CommonLisp}
+%%       \end{itemize}
+%%       \begin{itemize}
+%%       \item {\color{red}NAnt} on {\color{blue}.Net}
+%%       \item {\color{red}MS Build} on {\color{blue}.Net}
+%%       \item {\color{red}Maven} on {\color{blue}Java}
+%%       \end{itemize}
+%%     \end{multicols}
+%%   \end{centering}
+%% \end{frame}
 
-\begin{frame}{While thats our wish-list}
-  \begin{center}
-    \begin{itemize}
-    \item Bad news is, we haven't started work on most of these yet.\\
-      \pause
-    \item Good news is, we have good hackers, like yourself, listening to us here, who can help!
-    \end{itemize}
-    \pause
-    \quad\\
-    We'd love to support anything else that you can make time to contribute :-)
-  \end{center}
-\end{frame}
+%% \begin{frame}{While thats our wish-list}
+%%   \begin{center}
+%%     \begin{itemize}
+%%     \item Bad news is, we haven't started work on most of these yet.\\
+%%       \pause
+%%     \item Good news is, we have good hackers, like yourself, listening to us here, who can help!
+%%     \end{itemize}
+%%     \pause
+%%     \quad\\
+%%     We'd love to support anything else that you can make time to contribute :-)
+%%   \end{center}
+%% \end{frame}
 
-\section{Dev Adrenaline}
+%% \section{Dev Adrenaline}
 
-\subsection{Polynomial Time Set-Partitioning}
+%% \subsection{Polynomial Time Set-Partitioning}
 
-\begin{frame}{Partitioning Approaches}
-  \begin{itemize}
-  \item Greedy Algorithm (time-balancing-criteria uses this one)
-  \item Differencing Algorithm (half done, not upstrem yet)
-  \item GA spike, terrifingly good (upstream as a spike, written in CommonLisp, needs some more tuning)
-  \end{itemize}
-\end{frame}
+%% \begin{frame}{Partitioning Approaches}
+%%   \begin{itemize}
+%%   \item Greedy Algorithm (time-balancing-criteria uses this one)
+%%   \item Differencing Algorithm (half done, not upstrem yet)
+%%   \item GA spike, terrifingly good (upstream as a spike, written in CommonLisp, needs some more tuning)
+%%   \end{itemize}
+%% \end{frame}
 
-\begin{frame}{GA spike for set-partitioning}{TLB doesn't have it yet; coming soon}
-  \begin{center}
-    \pgfimage[width=11cm]{images/ga-shot.png}
-  \end{center}
-\end{frame}
+%% \begin{frame}{GA spike for set-partitioning}{TLB doesn't have it yet; coming soon}
+%%   \begin{center}
+%%     \pgfimage[width=11cm]{images/ga-shot.png}
+%%   \end{center}
+%% \end{frame}
 
-\subsection{Freestyle}
+%% \subsection{Freestyle}
 
-\begin{frame}{Freestyle}
-  On a freestyle day, you get to work on a solving a problem of your choice, related to the product/process/team.
-  \begin{itemize}
-  \item We try to do it \emph{one day per fort-night}
-  \item It bootstrapped TLB
-  \item Even though probably less than 10\% of TLB was written in Freestyle time, it was a necessary catalyst
-  \end{itemize}
-\end{frame}
+%% \begin{frame}{Freestyle}
+%%   On a freestyle day, you get to work on a solving a problem of your choice, related to the product/process/team.
+%%   \begin{itemize}
+%%   \item We try to do it \emph{one day per fort-night}
+%%   \item It bootstrapped TLB
+%%   \item Even though probably less than 10\% of TLB was written in Freestyle time, it was a necessary catalyst
+%%   \end{itemize}
+%% \end{frame}
 
-\section*{Thank you}
+%% \section*{Thank you}
 
-\begin{frame}{Thank you}
-  \begin{centering}
-    {\huge We are patch hungry*.\\Please Contribute.\\}
-    (its BSD 2 clause)\\
-    \quad\\
-        {\huge Thank you.}\\
-        \quad\\
-        \quad\\
-        References:\\
-        http://github.com/test-load-balancer/tlb\\
-        http://github.com/test-load-balancer/tlb\_rb\\
-        \quad\\
-        * http://github.com/test-load-balancer/tlb/issues\\
-  \end{centering}
-\end{frame}
+%% \begin{frame}{Thank you}
+%%   \begin{centering}
+%%     {\huge We are patch hungry*.\\Please Contribute.\\}
+%%     (its BSD 2 clause)\\
+%%     \quad\\
+%%         {\huge Thank you.}\\
+%%         \quad\\
+%%         \quad\\
+%%         References:\\
+%%         http://github.com/test-load-balancer/tlb\\
+%%         http://github.com/test-load-balancer/tlb\_rb\\
+%%         \quad\\
+%%         * http://github.com/test-load-balancer/tlb/issues\\
+%%   \end{centering}
+%% \end{frame}
 
 % All of the following is optional and typically not needed. 
 %% \appendix
