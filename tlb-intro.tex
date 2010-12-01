@@ -33,7 +33,7 @@
 }
 
 \date[xconf] 
-{XConf Pune, 2010}
+{ThoughtWorks - Bangalore 1 Office, Dec 2010}
 
 \subject{Introduction to internals of TLB, and its usage}
 
@@ -43,9 +43,6 @@
     \tableofcontents[currentsection,currentsubsection]
   \end{frame}
 }
-
-% If you wish to uncover everything in a step-wise fashion, uncomment the following command: 
-%\beamerdefaultoverlayspecification{<+->}
 
 \begin{document}
 
@@ -68,7 +65,6 @@
 
 \begin{frame}{Outline}
   \tableofcontents
-  % You might wish to add the option [pausesections]
 \end{frame}
 
 \section{Motivation}
@@ -106,6 +102,18 @@
   \begin{centering}
     ...just a few lines in the build script
   \end{centering}
+\end{frame}
+
+\begin{frame}{Optimal solution}
+  \begin{center}
+    Optimal solution can be obtained by minimizing, the following expression.\\
+    \quad
+    \begin{alignat}{3}
+      D ( A_1, A_2, ... A_n) = max \left \{ \sum_{x \in A_i} x \right \} - min \left \{ \sum_{x \in A_j} x \right \}
+    \end{alignat}\\
+    \quad \\
+    Its ideal when global minima for this function is reached.
+  \end{center}
 \end{frame}
 
 \subsection{Dream: Fast Builds}
@@ -457,7 +465,7 @@
    \item Using TLB on a ThoughtWorks Pune based project's RSpec suite \\
      {\small Thanks Jaju, for taking all the hell we gave you! :-)}
      \begin{itemize}
-     \item {\small In all modesty, it took us half-an-hour to setup once we could build locally, the searial way. ;-)}
+     \item {\small In all modesty, it took us half-an-hour to setup once we could build locally, the serial way. ;-)}
      \end{itemize}
     \end{itemize}
   \end{centering}
@@ -485,6 +493,8 @@
       \item {\color{green}Twist} using {\color{red}Ant} or {\color{red}Buildr} for {\color{blue}Java}
         \pause
       \item {\color{green}Rspec} using {\color{red}Rake} for both {\color{blue}MRI} and {\color{blue}JRuby}
+        \pause
+      \item {\color{green}Test::Unit} using {\color{red}Rake} for both {\color{blue}MRI} and {\color{blue}JRuby}
     \end{itemize}
   \end{centering}
 \end{frame}
@@ -495,7 +505,6 @@
       \begin{itemize}
       \item {\color{green}NUnit} on {\color{blue}.Net}
       \item {\color{green}MS Test} on {\color{blue}.Net}
-      \item {\color{green}TestUnit} on {\color{blue}MRI \& JRuby}
       \item {\color{green}Cucumber} on {\color{blue}MRI \& JRuby}
       \item {\color{green}TestNG} on {\color{blue}Java}
       \item {\color{green}PyUnit} on {\color{blue}Python}
@@ -536,10 +545,60 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{GA spike for set-partitioning}{TLB doesn't have it yet; coming soon}
+\begin{frame}{GA spike for set-partitioning}
   \begin{center}
-    \pgfimage[width=11cm]{images/ga-shot.png}
+    {\large TLB doesn't have it yet; coming soon! }\\
+    \quad\\
+    {\small Check details @ http://github.com/test-load-balancer/set-part }
   \end{center}
+\end{frame}
+
+\begin{frame}{Keep children when..}{fitness function}
+  \begin{center}
+    The new generation
+    \begin{alignat}{2}
+      A_x' =x_1...x_{i} + y_j...y_{j + \delta'} + x_{j+\delta+1}...x_n\\
+      A_y' =y_1...y_{j} + x_i...x_{i + \delta} + y_{j+\delta'+1}...y_m
+    \end{alignat}
+    Can be considered better than parents $$A_x\quad and\quad A_y\quad iff:$$
+    \begin{alignat}{2}
+      SD(A_x,A_y) > SD(A_x', A_y') 
+      \begin{cases}
+        \bar{A} = \frac{\sum_{i=1}^XU_{x_i}}{k}\quad :\quad k = no.\quad of\quad bags
+      \end{cases}
+    \end{alignat}
+    This is just one way to mesure the evolution of the new generation.\\
+  \end{center}
+\end{frame}
+
+\begin{frame}{Random numbers}{0 < n < 10000; 10 generations}
+  \begin{centering}
+    \pgfimage[width=11cm]{images/under-10000-random-nos-10.png}
+  \end{centering}
+\end{frame}
+
+\begin{frame}{Random numbers}{0 < n < 10000; 100 generations}
+  \begin{centering}
+    \pgfimage[width=11cm]{images/under-10000-random-nos-100.png}
+  \end{centering}
+\end{frame}
+
+\begin{frame}{Random numbers}{0 < n < 10000; 1000 generations}
+  \begin{centering}
+    \pgfimage[width=11cm]{images/under-10000-random-nos-1000.png}
+  \end{centering}
+\end{frame}
+
+\begin{frame}{Random numbers}{0 < n < 10000; 10000 generations}
+  \begin{centering}
+    \pgfimage[width=11cm]{images/under-10000-random-nos-10000.png}
+  \end{centering}
+\end{frame}
+
+\begin{frame}{Band distribution of numbers}{0 < 60\%X'es < 20\%; 60\% < 20\%X'es < 80\%; 80\% < 20\%X'es; 10000 generations}
+  \begin{centering}
+    \pgfimage[width=11cm]{images/band-nos-10000-iter.png}
+  \end{centering}
 \end{frame}
 
 \subsection{Freestyle}
@@ -549,7 +608,7 @@
   \begin{itemize}
     \item We try to do it \emph{one day per fort-night}
     \item It bootstrapped TLB
-    \item Even though probably less than 10\% of TLB was written in Freestyle time, it was a necessary catalyst
+    \item Even though less than 10\% of TLB was written in Freestyle time, it was a necessary catalyst
   \end{itemize}
 \end{frame}
 
@@ -570,35 +629,5 @@
   * http://github.com/test-load-balancer/tlb/issues\\
   \end{centering}
 \end{frame}
-
-% All of the following is optional and typically not needed. 
-%% \appendix
-%% \section<presentation>*{\appendixname}
-%% \subsection<presentation>*{For Further Reading}
-
-%% \begin{frame}[allowframebreaks]
-%%   \frametitle<presentation>{For Further Reading}
-    
-%%   \begin{thebibliography}{10}
-    
-%%   \beamertemplatebookbibitems
-%%   % Start with overview books.
-
-%%   \bibitem{Author1990}
-%%     A.~Author.
-%%     \newblock {\em Handbook of Everything}.
-%%     \newblock Some Press, 1990.
- 
-    
-%%   \beamertemplatearticlebibitems
-%%   % Followed by interesting articles. Keep the list short. 
-
-%%   \bibitem{Someone2000}
-%%     S.~Someone.
-%%     \newblock On this and that.
-%%     \newblock {\em Journal of This and That}, 2(1):50--100,
-%%     2000.
-%%   \end{thebibliography}
-%% \end{frame}
 
 \end{document}
