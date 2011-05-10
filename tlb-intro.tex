@@ -16,7 +16,7 @@
       {TLB}
 
 \subtitle
-    {a test load balancer for you}
+    {rocket booster for your build}
 
 \author[Pavan, Janmejay]
        {Pavan KS\inst{1} \and Janmejay Singh\inst{2}}
@@ -33,7 +33,7 @@
 }
 
 \date[xconf] 
-{Bangalore RUG meetup, Jan 2011}
+{JavaOne 2011, Hyderabad}
 
 \subject{Introduction to internals of TLB, and its usage}
 
@@ -81,6 +81,10 @@
   \begin{centering}
     \pgfimage[width=10cm]{images/no-balance-go.png}
     \par
+    \pause
+    \begin{center}
+      What is it doing that takes more than 49 minutes?
+    \end{center}
   \end{centering}
 \end{frame}
 
@@ -98,22 +102,14 @@
   \end{centering}
 \end{frame}
 
-\begin{frame}{by changing}
+\begin{frame}
   \begin{centering}
-    ...just a few lines in the build script
+    \begin{itemize}
+    \item With just a few lines changed in the build script \& executing tests parallely.
+      \pause
+    \item The longish build 'firefox' split into 6 partitions to executed parallely on 6 physical machines.
+    \end{itemize}
   \end{centering}
-\end{frame}
-
-\begin{frame}{Optimal solution}
-  \begin{center}
-    Optimal solution can be obtained by minimizing, the following expression.\\
-    \quad
-    \begin{alignat}{3}
-      D ( A_1, A_2, ... A_n) = max \left \{ \sum_{x \in A_i} x \right \} - min \left \{ \sum_{x \in A_j} x \right \}
-    \end{alignat}\\
-    \quad \\
-    Its ideal when global minima for this function is reached.
-  \end{center}
 \end{frame}
 
 \subsection{Dream: Fast Builds}
@@ -141,7 +137,7 @@
       \pause
     \item Speeding up builds is non trivial
       \pause
-    \item Most TW teams have a dev task for this don\text{'}t they??
+    \item Most teams have a dev task for this don\text{'}t they??
     \end{itemize}
   \end{centering}
 \end{frame}
@@ -154,23 +150,34 @@
       \begin{itemize}
       \item Difficult to model (typically end up in diamond dependencies)
         \pause
-      \item If downstream dependencies fail, turn around time to fix is huge
+      \item Pipelines (unit -> integration -> smoke -> functional) (serial process)
+        \pause
+      \item BUT, if downstream dependencies fail, turn around time to fix is huge
       \end{itemize}      
       \pause
     \item Throw more hardware at it - Slice and dice
       \pause
       \begin{itemize}
       \item Hand written partitioning using directories/tags etc (unequal partitions)
-        \pause
-      \item Pipelines (unit -> integration -> smoke -> functional) (serial process)
       \end{itemize}
     \end{itemize}
-    \pause
   \end{centering}
   \pause
   Logical! but Suboptimal :-(\\
   \pause
   Nither too efficient nor effective.
+\end{frame}
+
+\begin{frame}{Optimal solution}
+  \begin{center}
+    Optimal solution can be obtained by minimizing, the following expression.\\
+    \quad
+    \begin{alignat}{3}
+      D ( A_1, A_2, ... A_n) = max \left \{ \sum_{x \in A_i} x \right \} - min \left \{ \sum_{x \in A_j} x \right \}
+    \end{alignat}\\
+    \quad \\
+    Its ideal when global minima for this function is reached.
+  \end{center}
 \end{frame}
 
 \section{TLB}
@@ -203,36 +210,6 @@
 \begin{frame}{Setup}{Typical Setup}
   \begin{centering}
     \pgfimage[width=9.5cm]{images/typical-setup.png}
-  \end{centering}
-\end{frame}
-
-\begin{frame}{Setup}{Tlb Server}
-  \begin{centering}
-    \pgfimage[width=9.5cm]{images/server-focused.png}
-  \end{centering}
-\end{frame}
-
-\begin{frame}{Setup}{Tlb Client}
-  \begin{centering}
-    \pgfimage[width=9.5cm]{images/client-focused.png}
-  \end{centering}
-\end{frame}
-
-\begin{frame}{Setup}{Server-Client Communication}
-  \begin{centering}
-    \pgfimage[width=9.5cm]{images/server-client-communication-focused.png}
-  \end{centering}
-\end{frame}
-
-\begin{frame}{Setup}{Test Runner}
-  \begin{centering}
-    \pgfimage[width=9.5cm]{images/runner-focused.png}
-  \end{centering}
-\end{frame}
-
-\begin{frame}{Setup}{Client-Runner Communication}
-  \begin{centering}
-    \pgfimage[width=9.5cm]{images/client-runner-communication-focused.png}
   \end{centering}
 \end{frame}
 
@@ -461,12 +438,6 @@
     \item Balancing JUnit test-suite using Apache-Ant
       \pause
     \item Balancing RSpec test-suite using Rake
-    \pause
-   \item Using TLB on a ThoughtWorks Pune based project's RSpec suite \\
-     {\small Thanks Jaju, for taking all the hell we gave you! :-)}
-     \begin{itemize}
-     \item {\small In all modesty, it took us half-an-hour to setup once we could build locally, the serial way. ;-)}
-     \end{itemize}
     \end{itemize}
   \end{centering}
 \end{frame}
@@ -492,9 +463,23 @@
         \pause
       \item {\color{green}Twist} using {\color{red}Ant} or {\color{red}Buildr} for {\color{blue}Java}
         \pause
-      \item {\color{green}Rspec 1.x \& 2.x} using {\color{red}Rake} for both {\color{blue}MRI}
+      \item {\color{green}Rspec 1.x \& 2.x} using {\color{red}Rake} on {\color{blue}MRI}
         \pause
-      \item {\color{green}Test::Unit} using {\color{red}Rake} for both {\color{blue}MRI}
+      \item {\color{green}Test::Unit} using {\color{red}Rake} on {\color{blue}MRI}
+    \end{itemize}
+  \end{centering}
+\end{frame}
+
+\begin{frame}{Working on...}
+  \begin{centering}
+    \begin{itemize}
+    \item {\color{green}Junit} using {\color{red}Maven} on {\color{blue}Java}
+      \pause
+    \item {\color{green}Cucumber} using {\color{red}Rake} on both {\color{blue}MRI} and {\color{blue}JRuby}
+      \pause
+    \item {\color{green}Rspec 1.x \& 2.x} using {\color{red}Rake} on {\color{blue}JRuby}
+      \pause
+    \item {\color{green}Test::Unit} using {\color{red}Rake} on {\color{blue}JRuby}
     \end{itemize}
   \end{centering}
 \end{frame}
@@ -503,10 +488,10 @@
   \begin{centering}
     \begin{multicols}{2}
       \begin{itemize}
+      \item {\color{green}TestNG} on {\color{blue}Java}
+      \item {\color{green}JBehave} on {\color{blue}Java}
       \item {\color{green}NUnit} on {\color{blue}.Net}
       \item {\color{green}MS Test} on {\color{blue}.Net}
-      \item {\color{green}Cucumber} on {\color{blue}MRI \& JRuby}
-      \item {\color{green}TestNG} on {\color{blue}Java}
       \item {\color{green}PyUnit} on {\color{blue}Python}
       \item {\color{green}CPPUnit} on {\color{blue} C++}
       \item {\color{green}5am (fiveam)} on {\color{blue} CommonLisp}
@@ -515,7 +500,6 @@
       \begin{itemize}
       \item {\color{red}NAnt} on {\color{blue}.Net}
       \item {\color{red}MS Build} on {\color{blue}.Net}
-      \item {\color{red}Maven} on {\color{blue}Java}
       \item {\color{red}...} on {\color{blue}...}
       \end{itemize}
     \end{multicols}
@@ -601,17 +585,6 @@
   \begin{centering}
     \pgfimage[width=11cm]{images/band-nos-10000-iter.png}
   \end{centering}
-\end{frame}
-
-\subsection{Freestyle}
-
-\begin{frame}{Freestyle}
-  On a freestyle day, you get to work on a solving a problem of your choice, related to the product/process/team.
-  \begin{itemize}
-    \item We try to do it \emph{one day per fort-night}
-    \item It bootstrapped TLB
-    \item Even though less than 5\% of TLB was written in Freestyle time, it was a necessary catalyst
-  \end{itemize}
 \end{frame}
 
 \section*{Thank you}
