@@ -33,7 +33,7 @@
 }
 
 \date[xconf] 
-{JavaOne 2011, Hyderabad}
+{RubyConf India 2011, Bangalore}
 
 \subject{Introduction to internals of TLB, and its usage}
 
@@ -48,6 +48,16 @@
 
 \begin{frame}
   \titlepage
+\end{frame}
+
+\begin{frame}{TLB what?}
+  \begin{itemize}
+    \item A Free and Open Source software: \emph{BSD licensed}
+    \item Cuts your build time by executing tests parallely on a grid
+    \item Supports multiple build tools
+    \item Supports multiple testing tools
+    \item Supports multiple languages
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{Whats in it for me?}
@@ -456,31 +466,31 @@
   \end{center}
 \end{frame}
 
-\begin{frame}{Supported Frameworks}
+\begin{frame}{Supported Setup(s)}
   \begin{centering}
+    When we say Ruby, we mean both 1.9 and 1.8
+    \quad\\
     \begin{itemize}
+      \item {\color{green}Rspec 1.x \& 2.x} using {\color{red}Rake} on {\color{blue}MRI} and {\color{blue}JRuby}
+        \pause
+      \item {\color{green}Test::Unit} using {\color{red}Rake} on {\color{blue}MRI} and {\color{blue}JRuby}
+        \pause
+      \item {\color{green}Cucumber} using {\color{red}Rake} on {\color{blue}MRI} and {\color{blue}JRuby}
+        \pause
       \item {\color{green}Junit} using {\color{red}Ant} or {\color{red}Buildr} for {\color{blue}Java}
         \pause
       \item {\color{green}Twist} using {\color{red}Ant} or {\color{red}Buildr} for {\color{blue}Java}
-        \pause
-      \item {\color{green}Rspec 1.x \& 2.x} using {\color{red}Rake} on {\color{blue}MRI}
-        \pause
-      \item {\color{green}Test::Unit} using {\color{red}Rake} on {\color{blue}MRI}
     \end{itemize}
   \end{centering}
 \end{frame}
 
 \begin{frame}{Working on...}
   \begin{centering}
-    \begin{itemize}
-    \item {\color{green}Junit} using {\color{red}Maven} on {\color{blue}Java}
-      \pause
-    \item {\color{green}Cucumber} using {\color{red}Rake} on both {\color{blue}MRI} and {\color{blue}JRuby}
-      \pause
-    \item {\color{green}Rspec 1.x \& 2.x} using {\color{red}Rake} on {\color{blue}JRuby}
-      \pause
-    \item {\color{green}Test::Unit} using {\color{red}Rake} on {\color{blue}JRuby}
-    \end{itemize}
+    {\color{green}Junit} using {\color{red}Maven} on {\color{blue}Java}
+    \quad\\
+    \begin{centering}
+      Waiting on http://jira.codehaus.org/browse/SUREFIRE-726
+    \end{centering}
   \end{centering}
 \end{frame}
 
